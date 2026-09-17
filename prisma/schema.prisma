@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum OutletTier {
+  QSR
+  CASUAL
+  FINE_DINING
+}
+
+enum Role {
+  STAFF
+  LEAD
+  MANAGER
+}
+
+enum ShiftPeriod {
+  AM
+  PM
+}
+
+enum CheckStatus {
+  YES
+  MOSTLY
+  MISSED
+}
+
+enum RubricLevel {
+  EMERGING
+  DEVELOPING
+  SKILLED
+  MASTERY
+}
+
+enum Pillar {
+  EMOTIONAL_INTELLIGENCE
+  DECISIVENESS
+  DELEGATION_ACCOUNTABILITY
+  COACHING_DEVELOPING
+  CROSS_FUNCTIONAL_COMMUNICATION
+}
+
+enum ScoredBy {
+  SELF
+  SUPERVISOR
+}
+
+model Outlet {
+  id          String      @id @default(cuid())
+  name        String
+  tier        OutletTier
+  users       User[]
+  preShifts   PreShiftPlan[]
+  audits      DailyAudit[]
+  createdAt   DateTime    @default(now())
+}
+
+model User {
+  id             String           @id @default(cuid())
+  name           String
+  email          String           @unique
+  passwordHash   String
+  role           Role             @default(STAFF)
+  outletId       String
+  outlet         Outlet           @relation(fields: [outletId], references: [id])
+  quizAttempts   QuizAttempt[]
+  assessments    SkillAssessment[]
+  ledPreShifts   PreShiftPlan[]   @relation("PreShiftLead")
+  ledAudits      DailyAudit[]     @relation("AuditLead")
+  createdAt      DateTime         @default(now())
+}
+
+// The Pre-Shift Builder
+model PreShiftPlan {
+  id            String      @id @default(cuid())
+  outletId      String
+  outlet        Outlet      @relation(fields: [outletId], references: [id])
+  leadId        String
+  lead          User        @relation("PreShiftLead", fields: [leadId], references: [id])
+  date          DateTime
+  shift         ShiftPeriod
+  bigIdea       String
+  clearAction   String
+  energyWord    String
+  question1     String
+  question2     String
+  eightySixes   String?
+  createdAt     DateTime    @default(now())
+}
+
+// Daily Per-Shift Audit & Hospitality Recap Log
+model DailyAudit {
+  id                     String       @id @default(cuid())
+  outletId               String
+  outlet                 Outlet       @relation(fields: [outletId], references: [id])
+  leadId                 String
+  lead                   User         @relation("AuditLead", fields: [leadId], references: [id])
+  date                   DateTime
+  shift                  ShiftPeriod
+
+  transactionsObserved   Int          @default(0)
+  openerStatus           CheckStatus?
+  openerMissCount        Int          @default(0)
+  closeStatus            CheckStatus?
+  closeMissCount         Int          @default(0)
+  orderAccuracyCorrect   Int          @default(0)
+  orderAccuracyTotal     Int          @default(0)
+
+  avgTicketTimeSeconds   Int?
+  ticketTimeStandard     Int?
+  peakTicketTimeSeconds  Int?
+  peakCause              String?
+  eightySixedItems       String?
+
+  softSkillTallies       String       @default("{}") // JSON: { activeListening: n, empathy: n, ... }
+
+  momentOfShift          String?
+  coachingNeeded         String?
+
+  nonNeg1Status          CheckStatus?
+  nonNeg2Status          CheckStatus?
+  nonNeg3Status          CheckStatus?
+
+  createdAt              DateTime     @default(now())
+}
+
+// Situational quiz bank (Section 4A)
+model QuizScenario {
+  id             String        @id @default(cuid())
+  moduleNumber   Int           // 1-4
+  tier           OutletTier
+  situation      String
+  optionA        String
+  optionB        String
+  optionC        String
+  optionD        String
+  correctAnswer  String        // "A" | "B" | "C" | "D"
+  skillTested    String
+  coachingNote   String
+  attempts       QuizAttempt[]
+  createdAt      DateTime      @default(now())
+}
+
+model QuizAttempt {
+  id             String        @id @default(cuid())
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+  scenarioId     String
+  scenario       QuizScenario  @relation(fields: [scenarioId], references: [id])
+  chosenAnswer   String
+  correct        Boolean
+  createdAt      DateTime      @default(now())
+}
+
+// Skills Assessment rubric (Section 3) — self vs supervisor scoring
+model SkillAssessment {
+  id         String      @id @default(cuid())
+  userId     String
+  user       User        @relation(fields: [userId], references: [id])
+  pillar     Pillar
+  level      RubricLevel
+  scoredBy   ScoredBy
+  date       DateTime    @default(now())
+}
