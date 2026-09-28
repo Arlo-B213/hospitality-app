@@ -8,7 +8,7 @@ import {
   Palette,
   Image,
   Monitor,
-  TypeSans,
+  TextT,
   Gear,
   Check,
   CloudArrowUp,
@@ -295,7 +295,7 @@ export default function BrandingPage() {
                 value={formData.appName || ""}
                 onChange={handleInputChange}
                 placeholder="The Service Stack"
-                icon={TypeSans}
+                icon={TextT}
               />
             </div>
           </FormSection>
