@@ -58,10 +58,27 @@ async function main() {
   const scenarios = getAllScenarios();
   await prisma.quizScenario.createMany({ data: scenarios });
 
+  // Initialize default branding config
+  const brandingConfig = await prisma.brandingConfig.upsert({
+    where: { id: "default" },
+    update: {},
+    create: {
+      id: "default",
+      appName: "The Service Stack",
+      primaryColor: "#3b82f6",
+      secondaryColor: "#1e293b",
+      accentColor: "#f97316",
+      logoUrl: null,
+      theme: "dark",
+      fontFamily: "geist-sans",
+    },
+  });
+
   console.log("Seed complete:", {
     outlet: outlet.name,
     lead: lead.email,
     scenarios: scenarios.length,
+    branding: brandingConfig.appName,
   });
 }
 

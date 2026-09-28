@@ -167,3 +167,19 @@ model SkillAssessment {
   scoredBy   ScoredBy
   date       DateTime    @default(now())
 }
+
+// Branding & Customization Config
+model BrandingConfig {
+  id              String    @id @default("default")
+  appName         String    @default("The Service Stack")
+  primaryColor    String    @default("#3b82f6")
+  secondaryColor  String    @default("#1e293b")
+  accentColor     String    @default("#f97316")
+  logoUrl         String?
+  theme           String    @default("dark")
+  fontFamily      String    @default("geist-sans")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([id])
+}

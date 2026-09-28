@@ -28,6 +28,10 @@ const NAV = [
   { href: "/training-guide", label: "Training Guide" },
 ];
 
+const MANAGER_NAV = [
+  { href: "/branding", label: "Branding" },
+];
+
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const user = await getCurrentUser();
 
@@ -53,6 +57,20 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
                     {item.label}
                   </Link>
                 ))}
+                {user.role === "MANAGER" && (
+                  <>
+                    <span className="text-neutral-600">|</span>
+                    {MANAGER_NAV.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="hover:text-neutral-100 transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </>
+                )}
                 <span className="text-neutral-600">|</span>
                 <span className="text-neutral-300">
                   {user.name} · {user.outlet.name}
