@@ -1,5 +1,17 @@
 import { Pool } from 'pg';
 
+/**
+ * Simple in-memory cache for analytics data
+ * Cache TTL: 5 minutes for new hire analytics, 1 minute for cohort analytics
+ */
+interface CacheEntry {
+  data: any;
+  timestamp: number;
+}
+
+const ANALYTICS_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const COHORT_CACHE_TTL = 1 * 60 * 1000; // 1 minute
+
 export interface SkillProgress {
   skill_id: string;
   skill_type: string;
@@ -32,9 +44,39 @@ export interface CohortMember {
 }
 
 export class AnalyticsService {
+  private analyticsCache = new Map<string, CacheEntry>();
+  private cohortCache = new Map<string, CacheEntry>();
+
   constructor(private pool: Pool) {}
 
+  /**
+   * Invalidate analytics cache for a specific new hire
+   */
+  invalidateAnalyticsCache(newHireId: string): void {
+    this.analyticsCache.delete(newHireId);
+  }
+
+  /**
+   * Invalidate cohort cache for a specific department
+   */
+  invalidateCohortCache(department: string): void {
+    this.cohortCache.delete(department);
+  }
+
+  /**
+   * Check if cached data is still valid (not expired)
+   */
+  private isCacheValid(entry: CacheEntry, ttl: number): boolean {
+    return Date.now() - entry.timestamp < ttl;
+  }
+
   async getNewHireAnalytics(newHireId: string): Promise<AnalyticsData> {
+    // Check cache first
+    const cached = this.analyticsCache.get(newHireId);
+    if (cached && this.isCacheValid(cached, ANALYTICS_CACHE_TTL)) {
+      return cached.data;
+    }
+
     // Fetch new hire start date
     const nhResult = await this.pool.query(
       'SELECT start_date FROM new_hires WHERE id = $1 AND is_active = true',
@@ -178,7 +220,7 @@ export class AnalyticsService {
         ) / 100
       : 0;
 
-    return {
+    const result: AnalyticsData = {
       new_hire_id: newHireId,
       days_elapsed: daysElapsed,
       days_remaining: daysRemaining,
@@ -199,11 +241,25 @@ export class AnalyticsService {
         peer_average: peerAverage
       }
     };
+
+    // Cache the result
+    this.analyticsCache.set(newHireId, {
+      data: result,
+      timestamp: Date.now()
+    });
+
+    return result;
   }
 
   async getCohortAnalytics(
     department: 'FOH' | 'BOH'
   ): Promise<CohortMember[]> {
+    // Check cache first
+    const cached = this.cohortCache.get(department);
+    if (cached && this.isCacheValid(cached, COHORT_CACHE_TTL)) {
+      return cached.data;
+    }
+
     // Fetch all new hires of given department with their average ratings
     const result = await this.pool.query(
       `SELECT
@@ -233,6 +289,12 @@ export class AnalyticsService {
       avg_rating: Math.round(parseFloat(row.avg_rating) * 100) / 100,
       rank: index + 1
     }));
+
+    // Cache the result
+    this.cohortCache.set(department, {
+      data: cohortMembers,
+      timestamp: Date.now()
+    });
 
     return cohortMembers;
   }

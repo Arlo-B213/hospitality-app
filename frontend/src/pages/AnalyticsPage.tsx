@@ -4,10 +4,10 @@ import { useAuth } from '../hooks/useAuth'
 import { useAnalyticsSync, useSyncOnReconnect } from '../hooks/useSync'
 import { SyncStatus } from '../components/SyncStatus'
 import { MetricsCard } from '../components/MetricsCard'
-import { SkillHeatmap } from '../components/SkillHeatmap'
-import { RadarChart } from '../components/RadarChart'
-import { TrendChart } from '../components/TrendChart'
-import { CohortComparison } from '../components/CohortComparison'
+import { SkillHeatmapLazy } from '../components/LazyCharts'
+import { RadarChartLazy } from '../components/LazyCharts'
+import { TrendChartLazy } from '../components/LazyCharts'
+import { CohortComparisonLazy } from '../components/LazyCharts'
 import { ProgressTimeline } from '../components/ProgressTimeline'
 
 export const AnalyticsPage: React.FC = () => {
@@ -125,22 +125,22 @@ export const AnalyticsPage: React.FC = () => {
 
         {/* Row 2: Radar Chart and Trend Chart (1 col mobile, 2 col desktop) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <RadarChart
+          <RadarChartLazy
             technicalScore={analytics.technicalScore}
             softSkillScore={analytics.softSkillScore}
             leadershipScore={analytics.leadershipScore}
           />
-          <TrendChart data={analytics.dailyProgress} />
+          <TrendChartLazy data={analytics.dailyProgress} />
         </div>
 
         {/* Row 3: Cohort Comparison (Full Width) */}
-        <CohortComparison
+        <CohortComparisonLazy
           data={analytics.cohortComparison}
           percentile={analytics.cohortPercentile}
         />
 
         {/* Row 4: Skill Heatmap (Full Width) */}
-        <SkillHeatmap skills={analytics.skillProficiencies} />
+        <SkillHeatmapLazy skills={analytics.skillProficiencies} />
       </div>
 
       {/* Footer Note */}

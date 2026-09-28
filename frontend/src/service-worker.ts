@@ -10,7 +10,14 @@ const CACHE_VERSION = 'v1';
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VERSION}`;
 const OFFLINE_PAGE = '/offline.html';
 
-// Assets to precache on install
+// Maximum age for cached responses (5 minutes for API, 24 hours for assets)
+const CACHE_MAX_AGE = {
+  API: 5 * 60 * 1000,
+  ASSETS: 24 * 60 * 60 * 1000,
+  HTML: 1 * 60 * 60 * 1000, // 1 hour
+};
+
+// Assets to precache on install (minimal set for fast install)
 const PRECACHE_URLS = [
   '/',
   '/index.html',
@@ -36,30 +43,54 @@ self.addEventListener('install', (event: ExtendableEvent) => {
   );
 });
 
-// Activate event - clean up old caches
+// Activate event - clean up old caches and claim clients
 self.addEventListener('activate', (event: ExtendableEvent) => {
   console.log('[SW] Activating Service Worker...');
 
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          // Delete old cache versions
-          if (cacheName.startsWith(CACHE_PREFIX) && cacheName !== CACHE_NAME) {
-            console.log('[SW] Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-          return Promise.resolve();
-        })
-      );
-    }).then(() => {
-      // Claim all clients immediately
-      return self.clients.claim();
-    })
+    Promise.all([
+      // Delete old cache versions
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            // Delete old cache versions and stale caches
+            if (cacheName.startsWith(CACHE_PREFIX) && cacheName !== CACHE_NAME) {
+              console.log('[SW] Deleting old cache:', cacheName);
+              return caches.delete(cacheName);
+            }
+            return Promise.resolve();
+          })
+        );
+      }),
+      // Claim all clients to enable immediate control
+      self.clients.claim(),
+    ])
   );
 });
 
-// Fetch event - implement caching strategies
+/**
+ * Helper function to check if a cached response is still fresh
+ */
+function isCacheFresh(cachedDate: string | null, maxAge: number): boolean {
+  if (!cachedDate) return false;
+  const cacheTime = new Date(cachedDate).getTime();
+  return Date.now() - cacheTime < maxAge;
+}
+
+/**
+ * Helper function to add cache metadata
+ */
+function addCacheMetadata(response: Response): Response {
+  const headers = new Headers(response.headers);
+  headers.append('SW-Cached-Date', new Date().toISOString());
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: headers,
+  });
+}
+
+// Fetch event - implement intelligent caching strategies
 self.addEventListener('fetch', (event: FetchEvent) => {
   const { request } = event;
   const url = new URL(request.url);
@@ -74,7 +105,7 @@ self.addEventListener('fetch', (event: FetchEvent) => {
     return;
   }
 
-  // Network-first strategy for API calls
+  // Network-first strategy for API calls with smart fallback
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(
       (async () => {
@@ -83,16 +114,21 @@ self.addEventListener('fetch', (event: FetchEvent) => {
           // Cache successful responses
           if (response && response.status === 200) {
             const responseClone = response.clone();
+            const cachedResponse = addCacheMetadata(responseClone);
             caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, responseClone);
+              cache.put(request, cachedResponse);
             });
           }
           return response;
         } catch {
           // Fall back to cache for API calls
           const cachedResponse = await caches.match(request);
+          if (cachedResponse && isCacheFresh(cachedResponse.headers.get('SW-Cached-Date'), CACHE_MAX_AGE.API)) {
+            console.log('[SW] Returning fresh cached API response:', url.pathname);
+            return cachedResponse;
+          }
           if (cachedResponse) {
-            console.log('[SW] Returning cached API response:', url.pathname);
+            console.log('[SW] Returning stale cached API response (offline):', url.pathname);
             return cachedResponse;
           }
           // Return offline page if no cache
@@ -108,7 +144,7 @@ self.addEventListener('fetch', (event: FetchEvent) => {
     return;
   }
 
-  // Cache-first strategy for static assets
+  // Cache-first strategy for static assets with long TTL
   if (
     url.pathname.match(/\.(js|css|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/i) ||
     url.pathname.startsWith('/icons/')
@@ -125,8 +161,9 @@ self.addEventListener('fetch', (event: FetchEvent) => {
           // Cache successful responses
           if (response && response.status === 200) {
             const responseClone = response.clone();
+            const cachedResponse = addCacheMetadata(responseClone);
             caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, responseClone);
+              cache.put(request, cachedResponse);
             });
           }
           return response;
@@ -141,15 +178,16 @@ self.addEventListener('fetch', (event: FetchEvent) => {
     return;
   }
 
-  // Network-first for HTML pages (but cache if offline)
+  // Network-first for HTML pages with fallback to cache
   event.respondWith(
     (async () => {
       try {
         const response = await fetch(request);
         if (response && response.status === 200) {
           const responseClone = response.clone();
+          const cachedResponse = addCacheMetadata(responseClone);
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, responseClone);
+            cache.put(request, cachedResponse);
           });
         }
         return response;

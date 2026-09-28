@@ -16,7 +16,11 @@ interface TrendChartProps {
   data: DailyProgress[]
 }
 
-export const TrendChart: React.FC<TrendChartProps> = ({ data }) => {
+/**
+ * TrendChart component with React.memo optimization
+ * Prevents re-renders when props haven't changed
+ */
+export const TrendChart = React.memo<TrendChartProps>(({ data }) => {
   // Format data for display
   const chartData = data.map((item) => ({
     ...item,
@@ -98,4 +102,4 @@ export const TrendChart: React.FC<TrendChartProps> = ({ data }) => {
       </div>
     </div>
   )
-}
+})

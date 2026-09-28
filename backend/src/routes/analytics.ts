@@ -23,6 +23,7 @@ export function createAnalyticsRouter(pool: Pool): Router {
    * Fetch cohort-level analytics for a department
    * Query param: department (FOH or BOH, defaults to FOH)
    * RBAC: Only managers and admins can view cohort analytics
+   * Caching: Cache-Control max-age=60 (1 minute)
    */
   router.get(
     '/cohort/summary',
@@ -54,12 +55,17 @@ export function createAnalyticsRouter(pool: Pool): Router {
         }
 
         const cohort = await service.getCohortAnalytics(department);
-        res.json({
+        const responseData = {
           department,
           total_members: cohort.length,
           members: cohort,
           timestamp: new Date().toISOString(),
-        });
+        };
+
+        // Set cache headers: cache for 1 minute
+        res.set('Cache-Control', 'public, max-age=60');
+        res.set('Vary', 'Authorization');
+        res.json(responseData);
       } catch (error) {
         console.error('Error fetching cohort analytics:', error);
         res.status(500).json({
@@ -78,6 +84,7 @@ export function createAnalyticsRouter(pool: Pool): Router {
    * Includes: days elapsed, completion percentage, skill averages, weekly trends, cohort comparison
    * RBAC: Managers and admins can view all new hires,
    *       Team staff can only view their own team new hires
+   * Caching: Cache-Control max-age=300 (5 minutes)
    */
   router.get(
     '/:newHireId',
@@ -114,6 +121,10 @@ export function createAnalyticsRouter(pool: Pool): Router {
         const analytics = await service.getNewHireAnalytics(
           req.params.newHireId
         );
+
+        // Set cache headers: cache for 5 minutes
+        res.set('Cache-Control', 'public, max-age=300');
+        res.set('Vary', 'Authorization');
         res.json(analytics);
       } catch (error) {
         console.error('Error fetching analytics:', error);

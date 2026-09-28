@@ -16,7 +16,11 @@ interface RadarChartProps {
   leadershipScore: number
 }
 
-export const RadarChart: React.FC<RadarChartProps> = ({
+/**
+ * RadarChart component with React.memo optimization
+ * Prevents re-renders when props haven't changed
+ */
+export const RadarChart = React.memo<RadarChartProps>(({
   technicalScore,
   softSkillScore,
   leadershipScore,
@@ -107,4 +111,4 @@ export const RadarChart: React.FC<RadarChartProps> = ({
       </div>
     </div>
   )
-}
+})

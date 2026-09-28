@@ -16,7 +16,11 @@ interface CohortComparisonProps {
   percentile: number
 }
 
-export const CohortComparison: React.FC<CohortComparisonProps> = ({ data, percentile }) => {
+/**
+ * CohortComparison component with React.memo optimization
+ * Prevents re-renders when props haven't changed
+ */
+export const CohortComparison = React.memo<CohortComparisonProps>(({ data, percentile }) => {
   return (
     <div className="rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
       <div className="mb-4">
@@ -97,4 +101,4 @@ export const CohortComparison: React.FC<CohortComparisonProps> = ({ data, percen
       </div>
     </div>
   )
-}
+})

@@ -19,7 +19,11 @@ const getLabel = (proficiency: number): string => {
   return 'Beginner'
 }
 
-export const SkillHeatmap: React.FC<SkillHeatmapProps> = ({ skills }) => {
+/**
+ * SkillHeatmap component with React.memo optimization
+ * Prevents re-renders when props haven't changed
+ */
+export const SkillHeatmap = React.memo<SkillHeatmapProps>(({ skills }) => {
   // Create a grid of skills (responsive: 2 cols on mobile, 3 on tablet, 4 on desktop)
   const gridColsClass = 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
 
@@ -69,4 +73,4 @@ export const SkillHeatmap: React.FC<SkillHeatmapProps> = ({ skills }) => {
       </div>
     </div>
   )
-}
+})
