@@ -16,7 +16,7 @@ import { useState } from 'react';
 // 6. CTA Footer
 
 const PRIDE_COLORS = {
-  accent: '#10b981', // Emerald Green
+  accent: '#dc2626', // Bold Dark Red
   secondary: '#f59e0b', // Warm Gold
   surface: '#f9fafb', // Off-White
   text: '#18181b', // Zinc-950
