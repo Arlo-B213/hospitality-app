@@ -51,16 +51,16 @@ const containerVariants = {
       delayChildren: 0.2,
     },
   },
-};
+} as const;
 
 const itemVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: 'spring', stiffness: 80, damping: 18 },
+    transition: { type: 'spring' as const, stiffness: 80, damping: 18 },
   },
-};
+} as const;
 
 // Cascade reveal for cards
 const cascadeVariants = {
@@ -71,12 +71,12 @@ const cascadeVariants = {
     scale: 1,
     transition: {
       delay: idx * 0.15,
-      type: 'spring',
+      type: 'spring' as const,
       stiffness: 90,
       damping: 20,
     },
   }),
-};
+} as const;
 
 // Float animation
 const floatVariants = {
