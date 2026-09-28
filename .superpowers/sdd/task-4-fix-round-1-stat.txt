@@ -1,0 +1,7 @@
+ .superpowers/sdd/progress.md         |  57 +++
+ .superpowers/sdd/task-4-diffstat.txt |   9 +
+ .superpowers/sdd/task-4-report.md    | 319 +++++++++++++
+ backend/src/models/SkillRating.ts    |  53 ++-
+ backend/src/routes/evaluations.ts    |  52 +-
+ backend/tests/evaluations.test.ts    | 897 +++++++++++++++++------------------
+ 6 files changed, 890 insertions(+), 497 deletions(-)

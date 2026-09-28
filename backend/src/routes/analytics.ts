@@ -7,13 +7,70 @@ import { Pool } from 'pg';
 
 /**
  * Create analytics router with 2 endpoints:
- * - GET /api/analytics/:newHireId - fetch progress metrics and analytics for a new hire
  * - GET /api/analytics/cohort/summary - fetch cohort-level analytics (managers/admins only)
+ * - GET /api/analytics/:newHireId - fetch progress metrics and analytics for a new hire
+ *
+ * IMPORTANT: /cohort/summary MUST be defined BEFORE /:newHireId to prevent parameter
+ * route from capturing 'cohort' as the newHireId parameter
  */
 export function createAnalyticsRouter(pool: Pool): Router {
   const router = express.Router();
   const service = new AnalyticsService(pool);
   const newHireRepo = new NewHireRepository(pool);
+
+  /**
+   * GET /api/analytics/cohort/summary
+   * Fetch cohort-level analytics for a department
+   * Query param: department (FOH or BOH, defaults to FOH)
+   * RBAC: Only managers and admins can view cohort analytics
+   */
+  router.get(
+    '/cohort/summary',
+    requireAuth,
+    async (req: Request, res: Response): Promise<void> => {
+      try {
+        // RBAC: Only managers and admins can view cohort analytics
+        if (
+          ![ROLES.MANAGER, ROLES.ADMIN].includes(req.user?.role || '')
+        ) {
+          res.status(403).json({
+            error: 'Forbidden',
+            message: 'Only managers and admins can view cohort analytics',
+            timestamp: new Date().toISOString(),
+          });
+          return;
+        }
+
+        const department = (req.query.department as 'FOH' | 'BOH') || 'FOH';
+
+        // Validate department
+        if (!['FOH', 'BOH'].includes(department)) {
+          res.status(400).json({
+            error: 'Bad Request',
+            message: 'Invalid department. Must be FOH or BOH',
+            timestamp: new Date().toISOString(),
+          });
+          return;
+        }
+
+        const cohort = await service.getCohortAnalytics(department);
+        res.json({
+          department,
+          total_members: cohort.length,
+          members: cohort,
+          timestamp: new Date().toISOString(),
+        });
+      } catch (error) {
+        console.error('Error fetching cohort analytics:', error);
+        res.status(500).json({
+          error: 'Internal Server Error',
+          message:
+            error instanceof Error ? error.message : 'Failed to fetch cohort analytics',
+          timestamp: new Date().toISOString(),
+        });
+      }
+    }
+  );
 
   /**
    * GET /api/analytics/:newHireId
@@ -64,60 +121,6 @@ export function createAnalyticsRouter(pool: Pool): Router {
           error: 'Internal Server Error',
           message:
             error instanceof Error ? error.message : 'Failed to fetch analytics',
-          timestamp: new Date().toISOString(),
-        });
-      }
-    }
-  );
-
-  /**
-   * GET /api/analytics/cohort/summary
-   * Fetch cohort-level analytics for a department
-   * Query param: department (FOH or BOH, defaults to FOH)
-   * RBAC: Only managers and admins can view cohort analytics
-   */
-  router.get(
-    '/cohort/summary',
-    requireAuth,
-    async (req: Request, res: Response): Promise<void> => {
-      try {
-        // RBAC: Only managers and admins can view cohort analytics
-        if (
-          ![ROLES.MANAGER, ROLES.ADMIN].includes(req.user?.role || '')
-        ) {
-          res.status(403).json({
-            error: 'Forbidden',
-            message: 'Only managers and admins can view cohort analytics',
-            timestamp: new Date().toISOString(),
-          });
-          return;
-        }
-
-        const department = (req.query.department as 'FOH' | 'BOH') || 'FOH';
-
-        // Validate department
-        if (!['FOH', 'BOH'].includes(department)) {
-          res.status(400).json({
-            error: 'Bad Request',
-            message: 'Invalid department. Must be FOH or BOH',
-            timestamp: new Date().toISOString(),
-          });
-          return;
-        }
-
-        const cohort = await service.getCohortAnalytics(department);
-        res.json({
-          department,
-          total_members: cohort.length,
-          members: cohort,
-          timestamp: new Date().toISOString(),
-        });
-      } catch (error) {
-        console.error('Error fetching cohort analytics:', error);
-        res.status(500).json({
-          error: 'Internal Server Error',
-          message:
-            error instanceof Error ? error.message : 'Failed to fetch cohort analytics',
           timestamp: new Date().toISOString(),
         });
       }

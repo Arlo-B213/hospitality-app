@@ -2,6 +2,7 @@ import { Pool } from 'pg';
 import { generateToken, verifyToken, extractToken, TokenPayload } from '../src/utils/jwt';
 import { UserRepository } from '../src/models/User';
 import { AuthService } from '../src/services/AuthService';
+import { AuditService } from '../src/services/AuditService';
 import { Request, Response } from 'express';
 import { requireAuth, requireRole } from '../src/middleware/auth';
 
@@ -139,13 +140,15 @@ describe('JWT Utils', () => {
 describe('AuthService', () => {
   let authService: AuthService;
   let userRepository: UserRepository;
+  let auditService: AuditService;
 
   beforeEach(() => {
     process.env.JWT_SECRET = 'test-secret-key-for-testing-purposes-min-32';
     process.env.BCRYPT_ROUNDS = '10'; // Faster for tests
 
     userRepository = new UserRepository(mockPool);
-    authService = new AuthService(userRepository);
+    auditService = new AuditService(mockPool);
+    authService = new AuthService(userRepository, auditService);
   });
 
   describe('register', () => {

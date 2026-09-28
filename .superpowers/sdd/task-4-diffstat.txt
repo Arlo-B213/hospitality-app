@@ -1,0 +1,9 @@
+ .superpowers/sdd/progress.md         |   29 +
+ .superpowers/sdd/task-3-diff.txt     | 8163 ++++++++++++++++++++++++++++++++++
+ .superpowers/sdd/task-3-diffstat.txt |   12 +
+ .superpowers/sdd/task-3-report.md    |  220 +
+ backend/src/models/SkillRating.ts    |  190 +
+ backend/src/routes/evaluations.ts    |  376 ++
+ backend/src/server.ts                |    5 +
+ backend/tests/evaluations.test.ts    |  611 +++
+ 8 files changed, 9606 insertions(+)

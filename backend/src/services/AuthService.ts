@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { generateToken } from '../utils/jwt';
 import { UserRepository } from '../models/User';
 import { isValidRole, canRoleBeAssignedToTeam, ROLES } from '../middleware/rbac';
+import { AuditService } from './AuditService';
 
 export interface RegisterRequest {
   email: string;
@@ -46,11 +47,41 @@ export interface AuthResponse {
  */
 export class AuthService {
   private userRepository: UserRepository;
+  private auditService: AuditService;
   private bcryptRounds: number;
 
-  constructor(userRepository: UserRepository) {
+  constructor(userRepository: UserRepository, auditService: AuditService) {
     this.userRepository = userRepository;
+    this.auditService = auditService;
     this.bcryptRounds = parseInt(process.env.BCRYPT_ROUNDS || '12', 10);
+  }
+
+  /**
+   * Validate password complexity requirements
+   * Minimum: 12 chars, 1 uppercase, 1 number, 1 special character
+   * @param password Password to validate
+   * @returns Object with valid flag and array of error messages
+   */
+  private validatePasswordComplexity(password: string): { valid: boolean; errors: string[] } {
+    const errors: string[] = [];
+
+    if (password.length < 12) {
+      errors.push('Password must be at least 12 characters');
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.push('Password must include at least one uppercase letter');
+    }
+    if (!/\d/.test(password)) {
+      errors.push('Password must include at least one number');
+    }
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]/.test(password)) {
+      errors.push('Password must include at least one special character (!@#$%^&* etc)');
+    }
+
+    return {
+      valid: errors.length === 0,
+      errors,
+    };
   }
 
   /**
@@ -59,14 +90,16 @@ export class AuthService {
    * @returns AuthResponse with token and user info
    * @throws Error if email already exists or validation fails
    */
-  async register(request: RegisterRequest): Promise<AuthResponse> {
+  async register(request: RegisterRequest, ipAddress?: string, userAgent?: string): Promise<AuthResponse> {
     // Validate input
     if (!request.email || !request.password || !request.firstName || !request.lastName) {
       throw new Error('Missing required fields: email, password, firstName, lastName');
     }
 
-    if (request.password.length < 8) {
-      throw new Error('Password must be at least 8 characters long');
+    // Validate password complexity
+    const passwordValidation = this.validatePasswordComplexity(request.password);
+    if (!passwordValidation.valid) {
+      throw new Error(passwordValidation.errors.join('. '));
     }
 
     // SECURITY: Public signup is ONLY for new_hire role
@@ -98,6 +131,20 @@ export class AuthService {
       phone: request.phone,
     });
 
+    // Log user creation
+    await this.auditService.logUserCreation(
+      user.id,
+      {
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        role: user.role,
+      },
+      user.id, // Self-created during registration
+      ipAddress,
+      userAgent
+    );
+
     // Generate token
     const token = generateToken({
       userId: user.id,
@@ -126,14 +173,16 @@ export class AuthService {
    * @returns AuthResponse with token and user info
    * @throws Error if validation fails
    */
-  async createUser(request: CreateUserRequest): Promise<AuthResponse> {
+  async createUser(request: CreateUserRequest, adminUserId?: string, ipAddress?: string, userAgent?: string): Promise<AuthResponse> {
     // Validate input
     if (!request.email || !request.password || !request.firstName || !request.lastName || !request.role) {
       throw new Error('Missing required fields: email, password, firstName, lastName, role');
     }
 
-    if (request.password.length < 8) {
-      throw new Error('Password must be at least 8 characters long');
+    // Validate password complexity
+    const passwordValidation = this.validatePasswordComplexity(request.password);
+    if (!passwordValidation.valid) {
+      throw new Error(passwordValidation.errors.join('. '));
     }
 
     // SECURITY: Validate role is legal
@@ -165,6 +214,23 @@ export class AuthService {
       team: request.team,
       phone: request.phone,
     });
+
+    // Log user creation
+    if (adminUserId) {
+      await this.auditService.logUserCreation(
+        user.id,
+        {
+          email: user.email,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          role: user.role,
+          team: user.team,
+        },
+        adminUserId,
+        ipAddress,
+        userAgent
+      );
+    }
 
     // Generate token
     const token = generateToken({
@@ -264,14 +330,16 @@ export class AuthService {
    * @param newPassword New password
    * @throws Error if current password is invalid
    */
-  async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<void> {
+  async changePassword(userId: string, currentPassword: string, newPassword: string, ipAddress?: string, userAgent?: string): Promise<void> {
     // Validate input
     if (!currentPassword || !newPassword) {
       throw new Error('Current and new passwords are required');
     }
 
-    if (newPassword.length < 8) {
-      throw new Error('New password must be at least 8 characters long');
+    // Validate password complexity
+    const passwordValidation = this.validatePasswordComplexity(newPassword);
+    if (!passwordValidation.valid) {
+      throw new Error(passwordValidation.errors.join('. '));
     }
 
     // Get user
@@ -289,6 +357,9 @@ export class AuthService {
     // Hash and update new password
     const newPasswordHash = await this.hashPassword(newPassword);
     await this.userRepository.updatePassword(userId, newPasswordHash);
+
+    // Log password change
+    await this.auditService.logPasswordChange(userId, userId, ipAddress, userAgent);
   }
 
   /**
@@ -296,14 +367,16 @@ export class AuthService {
    * @param userId User ID
    * @param newPassword New password
    */
-  async resetPassword(userId: string, newPassword: string): Promise<void> {
+  async resetPassword(userId: string, newPassword: string, adminUserId?: string, ipAddress?: string, userAgent?: string): Promise<void> {
     // Validate input
     if (!newPassword) {
       throw new Error('New password is required');
     }
 
-    if (newPassword.length < 8) {
-      throw new Error('New password must be at least 8 characters long');
+    // Validate password complexity
+    const passwordValidation = this.validatePasswordComplexity(newPassword);
+    if (!passwordValidation.valid) {
+      throw new Error(passwordValidation.errors.join('. '));
     }
 
     // Get user
@@ -315,5 +388,10 @@ export class AuthService {
     // Hash and update password
     const newPasswordHash = await this.hashPassword(newPassword);
     await this.userRepository.updatePassword(userId, newPasswordHash);
+
+    // Log password reset
+    if (adminUserId) {
+      await this.auditService.logPasswordChange(userId, adminUserId, ipAddress, userAgent);
+    }
   }
 }

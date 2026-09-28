@@ -1,0 +1,1143 @@
+a88c9e7 feat: initialize backend project and database schema
+---
+ backend/.env.example         |  19 ++++
+ backend/.gitignore           |  42 +++++++
+ backend/README.md            | 243 +++++++++++++++++++++++++++++++++++++++
+ backend/jest.config.js       |  21 ++++
+ backend/package.json         |  52 +++++++++
+ backend/src/db/schema.sql    | 266 +++++++++++++++++++++++++++++++++++++++++++
+ backend/src/server.ts        | 115 +++++++++++++++++++
+ backend/tests/schema.test.ts | 249 ++++++++++++++++++++++++++++++++++++++++
+ backend/tsconfig.json        |  32 ++++++
+ docker-compose.yml           |  30 +++++
+ 10 files changed, 1069 insertions(+)
+---
+diff --git a/backend/.env.example b/backend/.env.example
+new file mode 100644
+index 0000000..327f763
+--- /dev/null
++++ b/backend/.env.example
+@@ -0,0 +1,19 @@
++# Database Configuration
++DATABASE_URL=postgresql://pride_user:pride_password@localhost:5432/pride_training_db
++
++# Server Configuration
++PORT=3001
++NODE_ENV=development
++
++# JWT Configuration
++JWT_SECRET=your-secret-key-change-in-production-min-32-chars
++JWT_EXPIRATION=7d
++
++# Security Configuration
++BCRYPT_ROUNDS=12
++
++# CORS Configuration
++CORS_ORIGIN=http://localhost:3000,http://localhost:3001
++
++# Encryption Configuration
++ENCRYPTION_KEY=your-32-char-hex-encryption-key-here
+diff --git a/backend/.gitignore b/backend/.gitignore
+new file mode 100644
+index 0000000..b79b874
+--- /dev/null
++++ b/backend/.gitignore
+@@ -0,0 +1,42 @@
++# Dependencies
++node_modules/
++package-lock.json
++yarn.lock
++
++# Build output
++dist/
++build/
++
++# Environment variables
++.env
++.env.local
++.env.*.local
++
++# IDE and editor files
++.vscode/
++.idea/
++*.swp
++*.swo
++*.swn
++.DS_Store
++
++# Test coverage
++coverage/
++.nyc_output/
++
++# Logs
++logs/
++*.log
++npm-debug.log*
++yarn-debug.log*
++yarn-error.log*
++
++# Runtime data
++pids/
++*.pid
++*.seed
++*.pid.lock
++
++# Temp files
++tmp/
++temp/
+diff --git a/backend/README.md b/backend/README.md
+new file mode 100644
+index 0000000..a7a5488
+--- /dev/null
++++ b/backend/README.md
+@@ -0,0 +1,243 @@
++# PRIDE Training App - Backend API
++
++Backend service for the PRIDE Training App, a mobile-first application for tracking new hire 90-day onboarding evaluations.
++
++## Prerequisites
++
++- Node.js 18+ (LTS)
++- npm 9+
++- Docker & Docker Compose
++- PostgreSQL 14+ (via Docker)
++
++## Project Structure
++
++```
++backend/
++├── src/
++│   ├── db/
++│   │   └── schema.sql       # PostgreSQL schema and migrations
++│   ├── middleware/          # Express middleware
++│   ├── routes/              # API route handlers
++│   ├── services/            # Business logic services
++│   └── server.ts            # Express app entry point
++├── tests/                   # Test suites
++├── package.json             # Dependencies and scripts
++├── tsconfig.json            # TypeScript configuration
++├── jest.config.js           # Jest testing configuration
++├── docker-compose.yml       # Local PostgreSQL setup
++└── .env.example             # Environment variables template
++```
++
++## Setup
++
++### 1. Install Dependencies
++
++```bash
++npm install
++```
++
++### 2. Configure Environment
++
++Copy `.env.example` to `.env` and update values:
++
++```bash
++cp .env.example .env
++```
++
++### 3. Start PostgreSQL
++
++```bash
++docker-compose up -d
++```
++
++Wait for database to be healthy:
++
++```bash
++docker-compose ps
++```
++
++### 4. Verify Schema
++
++The schema is automatically loaded on first PostgreSQL startup. To manually verify:
++
++```bash
++docker-compose exec postgres psql -U pride_user -d pride_training_db -c "\dt"
++```
++
++## Development
++
++### Start Development Server
++
++```bash
++npm run dev
++```
++
++Server will run on `http://localhost:3001`
++
++### Test Schema Loading
++
++```bash
++npm test
++```
++
++### Build Production
++
++```bash
++npm run build
++```
++
++### Start Production Server
++
++```bash
++npm start
++```
++
++## API Endpoints
++
++### Health Check
++
++```http
++GET /health
++```
++
++Returns database connection status and server uptime.
++
++## Database
++
++### Schema Overview
++
++- **users**: System users with roles and permissions
++- **new_hires**: New hire onboarding records
++- **technical_skills**: FOH and BOH specific skills
++- **soft_skills**: 10 shared soft skills
++- **leadership_modules**: 8 leadership development modules
++- **skill_assessments**: Technical and soft skill assessments
++- **leadership_progress**: Leadership module progress tracking
++- **evaluation_summaries**: 30/60/90-day evaluation summaries
++- **audit_logs**: Comprehensive audit trail
++
++### User Roles
++
++- `admin`: Full system access
++- `manager`: Department oversight
++- `asst_manager`: Assistant manager duties
++- `foh_lead`: Front-of-house lead
++- `chef`: Kitchen chef
++- `sous_chef`: Sous chef
++- `asst_chef`: Assistant chef
++- `new_hire`: New employee under evaluation
++
++### Departments
++
++- `FOH`: Front of House
++- `BOH`: Back of House
++
++## Security
++
++- All passwords hashed with bcryptjs (minimum 12 rounds)
++- All database queries parameterized (no SQL injection)
++- JWT-based authentication
++- CORS protection
++- Helmet security headers
++- Audit logging for all data modifications
++
++## Testing
++
++### Run Tests
++
++```bash
++npm test
++```
++
++### Run Tests in Watch Mode
++
++```bash
++npm run test:watch
++```
++
++### Coverage Threshold
++
++Minimum 80% code coverage required.
++
++## Environment Variables
++
++See `.env.example` for complete list. Key variables:
++
++- `DATABASE_URL`: PostgreSQL connection string
++- `PORT`: Server port (default: 3001)
++- `JWT_SECRET`: JWT signing secret
++- `BCRYPT_ROUNDS`: Password hash rounds (minimum: 12)
++- `NODE_ENV`: Environment (development, production, test)
++
++## Docker Commands
++
++### Start Services
++
++```bash
++docker-compose up -d
++```
++
++### Stop Services
++
++```bash
++docker-compose down
++```
++
++### View Logs
++
++```bash
++docker-compose logs -f postgres
++```
++
++### Connect to Database
++
++```bash
++docker-compose exec postgres psql -U pride_user -d pride_training_db
++```
++
++## Troubleshooting
++
++### Database Connection Failed
++
++1. Verify PostgreSQL is running: `docker-compose ps`
++2. Check DATABASE_URL in `.env`
++3. Verify credentials in docker-compose.yml
++4. Check network: `docker network ls`
++
++### Port Already in Use
++
++Change `PORT` in `.env` or stop conflicting service:
++
++```bash
++lsof -i :3001
++kill -9 <PID>
++```
++
++### Schema Not Loaded
++
++Check PostgreSQL logs:
++
++```bash
++docker-compose logs postgres
++```
++
++## Performance Indexes
++
++The schema includes strategic indexes on:
++- user email, role, active status
++- new hire user ID, manager, department, active status
++- assessment dates and evaluator
++- evaluation status and types
++- audit log table name, user, and timestamp
++
++## Compliance
++
++- Data encryption at rest: AES-256
++- Audit logging: All modifications tracked
++- Parameterized queries: SQL injection prevention
++- Password hashing: bcryptjs with 12+ rounds
++- Session management: JWT tokens with expiration
++
++## License
++
++PROPRIETARY
+diff --git a/backend/jest.config.js b/backend/jest.config.js
+new file mode 100644
+index 0000000..24f20db
+--- /dev/null
++++ b/backend/jest.config.js
+@@ -0,0 +1,21 @@
++module.exports = {
++  preset: 'ts-jest',
++  testEnvironment: 'node',
++  roots: ['<rootDir>/tests'],
++  testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
++  moduleFileExtensions: ['ts', 'js', 'json'],
++  collectCoverageFrom: [
++    'src/**/*.ts',
++    '!src/**/*.d.ts',
++    '!src/server.ts',
++  ],
++  coverageThreshold: {
++    global: {
++      branches: 80,
++      functions: 80,
++      lines: 80,
++      statements: 80,
++    },
++  },
++  testTimeout: 30000,
++};
+diff --git a/backend/package.json b/backend/package.json
+new file mode 100644
+index 0000000..e50c8c9
+--- /dev/null
++++ b/backend/package.json
+@@ -0,0 +1,52 @@
++{
++  "name": "pride-training-app-backend",
++  "version": "1.0.0",
++  "description": "Backend API for PRIDE Training App - 90-day new hire onboarding evaluations",
++  "main": "dist/server.js",
++  "scripts": {
++    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
++    "build": "tsc",
++    "start": "node dist/server.js",
++    "test": "jest --coverage",
++    "test:watch": "jest --watch",
++    "lint": "eslint src/**/*.ts"
++  },
++  "keywords": [
++    "onboarding",
++    "evaluation",
++    "training",
++    "api"
++  ],
++  "author": "PRIDE Team",
++  "license": "PROPRIETARY",
++  "dependencies": {
++    "express": "^4.18.2",
++    "pg": "^8.11.3",
++    "bcryptjs": "^2.4.3",
++    "jsonwebtoken": "^9.1.2",
++    "dotenv": "^16.3.1",
++    "cors": "^2.8.5",
++    "helmet": "^7.1.0",
++    "express-validator": "^7.0.0"
++  },
++  "devDependencies": {
++    "@types/node": "^20.10.6",
++    "@types/express": "^4.17.21",
++    "@types/jest": "^29.5.11",
++    "typescript": "^5.3.3",
++    "ts-node": "^10.9.2",
++    "ts-node-dev": "^2.0.0",
++    "@types/pg": "^8.11.3",
++    "@types/jsonwebtoken": "^9.0.7",
++    "@types/bcryptjs": "^2.4.6",
++    "jest": "^29.7.0",
++    "ts-jest": "^29.1.1",
++    "eslint": "^8.56.0",
++    "@typescript-eslint/eslint-plugin": "^6.16.0",
++    "@typescript-eslint/parser": "^6.16.0"
++  },
++  "engines": {
++    "node": ">=18.0.0",
++    "npm": ">=9.0.0"
++  }
++}
+diff --git a/backend/src/db/schema.sql b/backend/src/db/schema.sql
+new file mode 100644
+index 0000000..3d388dd
+--- /dev/null
++++ b/backend/src/db/schema.sql
+@@ -0,0 +1,266 @@
++-- PRIDE Training App Database Schema
++-- PostgreSQL 14+
++-- All passwords hashed with bcrypt (min 12 rounds)
++-- All queries parameterized (no SQL injection)
++
++-- Create enum types for roles and statuses
++CREATE TYPE user_role AS ENUM ('admin', 'manager', 'asst_manager', 'foh_lead', 'chef', 'sous_chef', 'asst_chef', 'new_hire');
++CREATE TYPE department_type AS ENUM ('FOH', 'BOH');
++CREATE TYPE evaluation_status AS ENUM ('not_started', 'in_progress', 'completed', 'archived');
++CREATE TYPE skill_proficiency AS ENUM ('novice', 'beginner', 'intermediate', 'advanced', 'expert');
++
++-- Users table
++-- Stores system users with roles and permissions
++CREATE TABLE users (
++  id SERIAL PRIMARY KEY,
++  email VARCHAR(255) NOT NULL UNIQUE,
++  password_hash VARCHAR(255) NOT NULL,
++  first_name VARCHAR(100) NOT NULL,
++  last_name VARCHAR(100) NOT NULL,
++  role user_role NOT NULL DEFAULT 'new_hire',
++  phone VARCHAR(20),
++  is_active BOOLEAN NOT NULL DEFAULT true,
++  last_login TIMESTAMP WITH TIME ZONE,
++  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
++  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
++  created_by INTEGER REFERENCES users(id),
++  updated_by INTEGER REFERENCES users(id),
++  CONSTRAINT valid_email CHECK (email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$')
++);
++
++-- New Hires table
++-- Tracks new hire onboarding journey
++CREATE TABLE new_hires (
++  id SERIAL PRIMARY KEY,
++  user_id INTEGER NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
++  department department_type NOT NULL,
++  start_date DATE NOT NULL,
++  day_90_target_date DATE NOT NULL,
++  hire_manager_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
++  is_active BOOLEAN NOT NULL DEFAULT true,
++  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
++  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
++  CONSTRAINT valid_dates CHECK (day_90_target_date > start_date)
++);
++
++-- Technical Skills Master Table
++-- Defines FOH and BOH specific technical skills
++CREATE TABLE technical_skills (
++  id SERIAL PRIMARY KEY,
++  skill_name VARCHAR(150) NOT NULL UNIQUE,
++  description TEXT,
++  department department_type NOT NULL,
++  is_active BOOLEAN NOT NULL DEFAULT true,
++  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
++  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
++);
++
++-- Pre-populate technical skills for FOH and BOH
++INSERT INTO technical_skills (skill_name, description, department) VALUES
++-- FOH Skills
++('Customer Service Excellence', 'Ability to provide outstanding customer service', 'FOH'),
++('POS System Proficiency', 'Competency with point-of-sale systems', 'FOH'),
++('Table Management', 'Ability to manage table assignments and flow', 'FOH'),
++('Communication Skills', 'Clear and effective communication with team', 'FOH'),
++('Time Management', 'Ability to prioritize and manage multiple tasks', 'FOH'),
++-- BOH Skills
++('Food Safety & Sanitation', 'Knowledge of food safety protocols and hygiene', 'BOH'),
++('Cooking Techniques', 'Proficiency in basic and advanced cooking techniques', 'BOH'),
++('Food Preparation', 'Ability to prepare ingredients efficiently', 'BOH'),
++('Kitchen Organization', 'Ability to maintain organized and clean kitchen', 'BOH'),
++('Recipe Execution', 'Ability to follow recipes and execute dishes to standard', 'BOH');
++
++-- Soft Skills Master Table
++-- 10 shared soft skills across all employees
++CREATE TABLE soft_skills (
++  id SERIAL PRIMARY KEY,
++  skill_name VARCHAR(150) NOT NULL UNIQUE,
++  description TEXT,
++  is_active BOOLEAN NOT NULL DEFAULT true,
++  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
++  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
++);
++
++-- Pre-populate 10 soft skills
++INSERT INTO soft_skills (skill_name, description) VALUES
++('Communication', 'Ability to communicate clearly and effectively'),
++('Teamwork', 'Ability to work collaboratively with others'),
++('Problem Solving', 'Ability to identify and solve issues'),
++('Adaptability', 'Ability to adjust to changing circumstances'),
++('Work Ethic', 'Commitment to quality work and reliability'),
++('Time Management', 'Ability to manage time effectively'),
++('Customer Focus', 'Commitment to meeting customer needs'),
++('Leadership', 'Ability to guide and inspire others'),
++('Attention to Detail', 'Ability to focus on accuracy and completeness'),
++('Continuous Learning', 'Commitment to ongoing professional development');
++
++-- Leadership Modules Master Table
++-- 8 leadership modules for development
++CREATE TABLE leadership_modules (
++  id SERIAL PRIMARY KEY,
++  module_name VARCHAR(150) NOT NULL UNIQUE,
++  description TEXT,
++  module_sequence INTEGER NOT NULL UNIQUE,
++  duration_days INTEGER NOT NULL DEFAULT 10,
++  is_active BOOLEAN NOT NULL DEFAULT true,
++  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
++  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
++);
++
++-- Pre-populate 8 leadership modules
++INSERT INTO leadership_modules (module_name, description, module_sequence, duration_days) VALUES
++('Self-Awareness', 'Understanding personal strengths, weaknesses, and values', 1, 10),
++('Emotional Intelligence', 'Recognizing and managing emotions in self and others', 2, 10),
++('Decision Making', 'Framework for making sound decisions', 3, 10),
++('Delegation', 'Effectively delegating tasks and responsibilities', 4, 10),
++('Conflict Resolution', 'Strategies for resolving team conflicts', 5, 10),
++('Coaching & Mentoring', 'Developing others through coaching and mentoring', 6, 10),
++('Strategic Thinking', 'Thinking strategically about business opportunities', 7, 10),
++('Communication Mastery', 'Advanced communication skills for leaders', 8, 10);
++
++-- Skill Assessments Table
++-- Tracks assessment of technical skills and soft skills for new hires
++CREATE TABLE skill_assessments (
++  id SERIAL PRIMARY KEY,
++  new_hire_id INTEGER NOT NULL REFERENCES new_hires(id) ON DELETE CASCADE,
++  skill_type VARCHAR(20) NOT NULL CHECK (skill_type IN ('technical', 'soft')),
++  skill_id INTEGER NOT NULL,
++  assessor_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
++  proficiency_level skill_proficiency NOT NULL,
++  comments TEXT,
++  assessment_date DATE NOT NULL,
++  is_completed BOOLEAN NOT NULL DEFAULT true,
++  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
++  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
++);
++
++-- Leadership Module Progress Table
++-- Tracks progress through 8 leadership modules
++CREATE TABLE leadership_progress (
++  id SERIAL PRIMARY KEY,
++  new_hire_id INTEGER NOT NULL REFERENCES new_hires(id) ON DELETE CASCADE,
++  leadership_module_id INTEGER NOT NULL REFERENCES leadership_modules(id) ON DELETE RESTRICT,
++  start_date DATE,
++  completion_date DATE,
++  status evaluation_status NOT NULL DEFAULT 'not_started',
++  mentor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
++  progress_notes TEXT,
++  is_completed BOOLEAN NOT NULL DEFAULT false,
++  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
++  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
++  CONSTRAINT valid_leadership_dates CHECK (completion_date IS NULL OR completion_date >= start_date)
++);
++
++-- Evaluation Summaries Table
++-- Overall evaluation summary for each new hire at different milestones
++CREATE TABLE evaluation_summaries (
++  id SERIAL PRIMARY KEY,
++  new_hire_id INTEGER NOT NULL REFERENCES new_hires(id) ON DELETE CASCADE,
++  evaluation_type VARCHAR(50) NOT NULL CHECK (evaluation_type IN ('30_day', '60_day', '90_day', 'final')),
++  evaluator_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
++  overall_rating skill_proficiency NOT NULL,
++  technical_skills_average NUMERIC(3, 2) CHECK (technical_skills_average >= 0 AND technical_skills_average <= 5),
++  soft_skills_average NUMERIC(3, 2) CHECK (soft_skills_average >= 0 AND soft_skills_average <= 5),
++  leadership_progress_average NUMERIC(3, 2) CHECK (leadership_progress_average >= 0 AND leadership_progress_average <= 5),
++  strengths TEXT,
++  areas_for_improvement TEXT,
++  action_items TEXT,
++  status evaluation_status NOT NULL DEFAULT 'not_started',
++  evaluation_date DATE NOT NULL,
++  due_date DATE NOT NULL,
++  is_submitted BOOLEAN NOT NULL DEFAULT false,
++  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
++  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
++  CONSTRAINT unique_evaluation_per_milestone UNIQUE (new_hire_id, evaluation_type)
++);
++
++-- Audit Logs Table
++-- Comprehensive audit trail for all data modifications
++CREATE TABLE audit_logs (
++  id BIGSERIAL PRIMARY KEY,
++  table_name VARCHAR(100) NOT NULL,
++  record_id INTEGER NOT NULL,
++  action VARCHAR(10) NOT NULL CHECK (action IN ('INSERT', 'UPDATE', 'DELETE')),
++  user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
++  old_values JSONB,
++  new_values JSONB,
++  change_reason TEXT,
++  ip_address INET,
++  user_agent TEXT,
++  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
++);
++
++-- Create indexes for performance optimization
++CREATE INDEX idx_users_email ON users(email);
++CREATE INDEX idx_users_role ON users(role);
++CREATE INDEX idx_users_is_active ON users(is_active);
++CREATE INDEX idx_new_hires_user_id ON new_hires(user_id);
++CREATE INDEX idx_new_hires_hire_manager_id ON new_hires(hire_manager_id);
++CREATE INDEX idx_new_hires_department ON new_hires(department);
++CREATE INDEX idx_new_hires_is_active ON new_hires(is_active);
++CREATE INDEX idx_skill_assessments_new_hire_id ON skill_assessments(new_hire_id);
++CREATE INDEX idx_skill_assessments_assessor_id ON skill_assessments(assessor_id);
++CREATE INDEX idx_skill_assessments_assessment_date ON skill_assessments(assessment_date);
++CREATE INDEX idx_leadership_progress_new_hire_id ON leadership_progress(new_hire_id);
++CREATE INDEX idx_leadership_progress_status ON leadership_progress(status);
++CREATE INDEX idx_evaluation_summaries_new_hire_id ON evaluation_summaries(new_hire_id);
++CREATE INDEX idx_evaluation_summaries_evaluation_type ON evaluation_summaries(evaluation_type);
++CREATE INDEX idx_evaluation_summaries_status ON evaluation_summaries(status);
++CREATE INDEX idx_audit_logs_table_name ON audit_logs(table_name);
++CREATE INDEX idx_audit_logs_user_id ON audit_logs(user_id);
++CREATE INDEX idx_audit_logs_created_at ON audit_logs(created_at);
++CREATE INDEX idx_audit_logs_record_id_table ON audit_logs(table_name, record_id);
++
++-- Create updated_at trigger function
++CREATE OR REPLACE FUNCTION update_updated_at_column()
++RETURNS TRIGGER AS $$
++BEGIN
++  NEW.updated_at = CURRENT_TIMESTAMP;
++  RETURN NEW;
++END;
++$$ LANGUAGE plpgsql;
++
++-- Apply updated_at trigger to all tables with updated_at column
++CREATE TRIGGER trigger_users_updated_at
++  BEFORE UPDATE ON users
++  FOR EACH ROW
++  EXECUTE FUNCTION update_updated_at_column();
++
++CREATE TRIGGER trigger_new_hires_updated_at
++  BEFORE UPDATE ON new_hires
++  FOR EACH ROW
++  EXECUTE FUNCTION update_updated_at_column();
++
++CREATE TRIGGER trigger_technical_skills_updated_at
++  BEFORE UPDATE ON technical_skills
++  FOR EACH ROW
++  EXECUTE FUNCTION update_updated_at_column();
++
++CREATE TRIGGER trigger_soft_skills_updated_at
++  BEFORE UPDATE ON soft_skills
++  FOR EACH ROW
++  EXECUTE FUNCTION update_updated_at_column();
++
++CREATE TRIGGER trigger_leadership_modules_updated_at
++  BEFORE UPDATE ON leadership_modules
++  FOR EACH ROW
++  EXECUTE FUNCTION update_updated_at_column();
++
++CREATE TRIGGER trigger_skill_assessments_updated_at
++  BEFORE UPDATE ON skill_assessments
++  FOR EACH ROW
++  EXECUTE FUNCTION update_updated_at_column();
++
++CREATE TRIGGER trigger_leadership_progress_updated_at
++  BEFORE UPDATE ON leadership_progress
++  FOR EACH ROW
++  EXECUTE FUNCTION update_updated_at_column();
++
++CREATE TRIGGER trigger_evaluation_summaries_updated_at
++  BEFORE UPDATE ON evaluation_summaries
++  FOR EACH ROW
++  EXECUTE FUNCTION update_updated_at_column();
++
++-- Grant appropriate permissions (adjust as needed for your security model)
++GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA public TO pride_user;
++GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO pride_user;
+diff --git a/backend/src/server.ts b/backend/src/server.ts
+new file mode 100644
+index 0000000..6c2a9ed
+--- /dev/null
++++ b/backend/src/server.ts
+@@ -0,0 +1,115 @@
++import express, { Express, Request, Response, NextFunction } from 'express';
++import cors from 'cors';
++import helmet from 'helmet';
++import dotenv from 'dotenv';
++import { Pool, PoolClient } from 'pg';
++
++// Load environment variables
++dotenv.config();
++
++// Initialize Express app
++const app: Express = express();
++const port = process.env.PORT || 3001;
++
++// Initialize PostgreSQL connection pool
++const pool = new Pool({
++  connectionString: process.env.DATABASE_URL || 'postgresql://pride_user:pride_password@localhost:5432/pride_training_db',
++  max: 20,
++  idleTimeoutMillis: 30000,
++  connectionTimeoutMillis: 2000,
++});
++
++// Pool error handler
++pool.on('error', (err: Error) => {
++  console.error('Unexpected error on idle client', err);
++});
++
++// Middleware
++app.use(helmet());
++app.use(cors({
++  origin: (process.env.CORS_ORIGIN || 'http://localhost:3000').split(','),
++  credentials: true,
++}));
++app.use(express.json({ limit: '10mb' }));
++app.use(express.urlencoded({ limit: '10mb', extended: true }));
++
++// Request logging middleware
++app.use((req: Request, res: Response, next: NextFunction) => {
++  console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);
++  next();
++});
++
++// Health check endpoint
++app.get('/health', async (req: Request, res: Response) => {
++  try {
++    // Test database connection
++    const client: PoolClient = await pool.connect();
++    try {
++      await client.query('SELECT NOW()');
++      res.status(200).json({
++        status: 'healthy',
++        timestamp: new Date().toISOString(),
++        database: 'connected',
++        uptime: process.uptime(),
++      });
++    } finally {
++      client.release();
++    }
++  } catch (error) {
++    console.error('Health check failed:', error);
++    res.status(503).json({
++      status: 'unhealthy',
++      timestamp: new Date().toISOString(),
++      database: 'disconnected',
++      error: error instanceof Error ? error.message : 'Unknown error',
++    });
++  }
++});
++
++// 404 handler
++app.use((req: Request, res: Response) => {
++  res.status(404).json({
++    error: 'Not Found',
++    message: `Route ${req.method} ${req.path} not found`,
++    timestamp: new Date().toISOString(),
++  });
++});
++
++// Error handler middleware
++app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
++  console.error('Error:', err);
++  res.status(500).json({
++    error: 'Internal Server Error',
++    message: process.env.NODE_ENV === 'development' ? err.message : 'An error occurred',
++    timestamp: new Date().toISOString(),
++  });
++});
++
++// Graceful shutdown
++const server = app.listen(port, () => {
++  console.log(`PRIDE Training App Backend listening on port ${port}`);
++  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
++});
++
++// Handle graceful shutdown
++process.on('SIGTERM', async () => {
++  console.log('SIGTERM received, shutting down gracefully');
++  server.close(async () => {
++    console.log('HTTP server closed');
++    await pool.end();
++    console.log('Database pool closed');
++    process.exit(0);
++  });
++});
++
++process.on('SIGINT', async () => {
++  console.log('SIGINT received, shutting down gracefully');
++  server.close(async () => {
++    console.log('HTTP server closed');
++    await pool.end();
++    console.log('Database pool closed');
++    process.exit(0);
++  });
++});
++
++export { app, pool };
+diff --git a/backend/tests/schema.test.ts b/backend/tests/schema.test.ts
+new file mode 100644
+index 0000000..225ee91
+--- /dev/null
++++ b/backend/tests/schema.test.ts
+@@ -0,0 +1,249 @@
++import { Pool, PoolClient } from 'pg';
++
++describe('Database Schema', () => {
++  let pool: Pool;
++
++  beforeAll(() => {
++    pool = new Pool({
++      connectionString: process.env.DATABASE_URL || 'postgresql://pride_user:pride_password@localhost:5432/pride_training_db',
++      max: 5,
++    });
++  });
++
++  afterAll(async () => {
++    await pool.end();
++  });
++
++  it('should connect to the database', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query('SELECT NOW()');
++      expect(result.rows.length).toBe(1);
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should have users table with correct columns', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query(`
++        SELECT column_name, data_type
++        FROM information_schema.columns
++        WHERE table_name = 'users'
++        ORDER BY column_name
++      `);
++
++      const columns = result.rows.map((row) => row.column_name);
++      expect(columns).toContain('id');
++      expect(columns).toContain('email');
++      expect(columns).toContain('password_hash');
++      expect(columns).toContain('first_name');
++      expect(columns).toContain('last_name');
++      expect(columns).toContain('role');
++      expect(columns).toContain('is_active');
++      expect(columns).toContain('created_at');
++      expect(columns).toContain('updated_at');
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should have new_hires table with correct columns', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query(`
++        SELECT column_name, data_type
++        FROM information_schema.columns
++        WHERE table_name = 'new_hires'
++        ORDER BY column_name
++      `);
++
++      const columns = result.rows.map((row) => row.column_name);
++      expect(columns).toContain('id');
++      expect(columns).toContain('user_id');
++      expect(columns).toContain('department');
++      expect(columns).toContain('start_date');
++      expect(columns).toContain('day_90_target_date');
++      expect(columns).toContain('hire_manager_id');
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should have skill_assessments table', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query(`
++        SELECT table_name
++        FROM information_schema.tables
++        WHERE table_name = 'skill_assessments'
++      `);
++
++      expect(result.rows.length).toBe(1);
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should have leadership_modules table with 8 pre-populated modules', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query('SELECT COUNT(*) FROM leadership_modules');
++
++      expect(parseInt(result.rows[0].count, 10)).toBe(8);
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should have leadership_progress table', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query(`
++        SELECT table_name
++        FROM information_schema.tables
++        WHERE table_name = 'leadership_progress'
++      `);
++
++      expect(result.rows.length).toBe(1);
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should have evaluation_summaries table', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query(`
++        SELECT table_name
++        FROM information_schema.tables
++        WHERE table_name = 'evaluation_summaries'
++      `);
++
++      expect(result.rows.length).toBe(1);
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should have audit_logs table', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query(`
++        SELECT table_name
++        FROM information_schema.tables
++        WHERE table_name = 'audit_logs'
++      `);
++
++      expect(result.rows.length).toBe(1);
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should have correct enum types', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query(`
++        SELECT typname
++        FROM pg_type
++        WHERE typtype = 'e'
++        ORDER BY typname
++      `);
++
++      const enums = result.rows.map((row) => row.typname);
++      expect(enums).toContain('user_role');
++      expect(enums).toContain('department_type');
++      expect(enums).toContain('evaluation_status');
++      expect(enums).toContain('skill_proficiency');
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should have correct indexes for performance', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query(`
++        SELECT COUNT(*) as index_count
++        FROM pg_indexes
++        WHERE schemaname = 'public'
++      `);
++
++      const indexCount = parseInt(result.rows[0].index_count, 10);
++      // Should have at least the main indexes we created
++      expect(indexCount).toBeGreaterThan(10);
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should have technical skills pre-populated', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query('SELECT COUNT(*) FROM technical_skills');
++
++      expect(parseInt(result.rows[0].count, 10)).toBe(10);
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should have soft skills pre-populated', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query('SELECT COUNT(*) FROM soft_skills');
++
++      expect(parseInt(result.rows[0].count, 10)).toBe(10);
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should have update_updated_at_column trigger function', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query(`
++        SELECT routine_name
++        FROM information_schema.routines
++        WHERE routine_name = 'update_updated_at_column'
++      `);
++
++      expect(result.rows.length).toBe(1);
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should enforce email format constraint on users table', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      // This should fail due to invalid email constraint
++      await expect(
++        client.query(
++          'INSERT INTO users (email, password_hash, first_name, last_name) VALUES ($1, $2, $3, $4)',
++          ['invalid-email', 'hash', 'John', 'Doe']
++        )
++      ).rejects.toThrow();
++    } finally {
++      client.release();
++    }
++  });
++
++  it('should have foreign key constraints', async () => {
++    const client: PoolClient = await pool.connect();
++    try {
++      const result = await client.query(`
++        SELECT constraint_name, constraint_type
++        FROM information_schema.table_constraints
++        WHERE table_name = 'new_hires' AND constraint_type = 'FOREIGN KEY'
++      `);
++
++      const constraintNames = result.rows.map((row) => row.constraint_name);
++      expect(constraintNames.length).toBeGreaterThan(0);
++    } finally {
++      client.release();
++    }
++  });
++});
+diff --git a/backend/tsconfig.json b/backend/tsconfig.json
+new file mode 100644
+index 0000000..81424bd
+--- /dev/null
++++ b/backend/tsconfig.json
+@@ -0,0 +1,32 @@
++{
++  "compilerOptions": {
++    "target": "ES2020",
++    "module": "commonjs",
++    "lib": ["ES2020"],
++    "outDir": "./dist",
++    "rootDir": "./src",
++    "strict": true,
++    "esModuleInterop": true,
++    "skipLibCheck": true,
++    "forceConsistentCasingInFileNames": true,
++    "resolveJsonModule": true,
++    "moduleResolution": "node",
++    "allowSyntheticDefaultImports": true,
++    "declaration": true,
++    "declarationMap": true,
++    "sourceMap": true,
++    "noImplicitAny": true,
++    "strictNullChecks": true,
++    "strictFunctionTypes": true,
++    "strictBindCallApply": true,
++    "strictPropertyInitialization": true,
++    "noImplicitThis": true,
++    "alwaysStrict": true,
++    "noUnusedLocals": true,
++    "noUnusedParameters": true,
++    "noImplicitReturns": true,
++    "noFallthroughCasesInSwitch": true
++  },
++  "include": ["src/**/*"],
++  "exclude": ["node_modules", "dist", "tests"]
++}
+diff --git a/docker-compose.yml b/docker-compose.yml
+new file mode 100644
+index 0000000..2c45351
+--- /dev/null
++++ b/docker-compose.yml
+@@ -0,0 +1,30 @@
++version: '3.8'
++
++services:
++  postgres:
++    image: postgres:14-alpine
++    container_name: pride_training_db
++    environment:
++      POSTGRES_USER: pride_user
++      POSTGRES_PASSWORD: pride_password
++      POSTGRES_DB: pride_training_db
++    ports:
++      - "5432:5432"
++    volumes:
++      - ./backend/src/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
++      - postgres_data:/var/lib/postgresql/data
++    healthcheck:
++      test: ["CMD-SHELL", "pg_isready -U pride_user -d pride_training_db"]
++      interval: 10s
++      timeout: 5s
++      retries: 5
++    networks:
++      - pride_network
++
++volumes:
++  postgres_data:
++    driver: local
++
++networks:
++  pride_network:
++    driver: bridge

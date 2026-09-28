@@ -1,20 +1,37 @@
 import { Router, Request, Response } from 'express';
 import { Pool } from 'pg';
+import rateLimit from 'express-rate-limit';
 import { AuthService } from '../services/AuthService';
+import { AuditService } from '../services/AuditService';
 import { UserRepository } from '../models/User';
 import { requireAuth, requireRole } from '../middleware/auth';
 
 export function createAuthRoutes(pool: Pool): Router {
   const router = Router();
   const userRepository = new UserRepository(pool);
-  const authService = new AuthService(userRepository);
+  const auditService = new AuditService(pool);
+  const authService = new AuthService(userRepository, auditService);
+
+  // Rate limiting: 5 attempts per 15 minutes per IP
+  const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // 5 requests per windowMs
+    message: 'Too many authentication attempts, please try again later',
+    standardHeaders: true, // Return rate limit info in `RateLimit-*` headers
+    legacyHeaders: false, // Disable `X-RateLimit-*` headers
+    skip: (req: Request) => {
+      // Don't rate limit if already authenticated (for change-password)
+      return !!req.headers.authorization;
+    },
+  });
 
   /**
    * POST /auth/register
    * Public user registration - RESTRICTED TO new_hire ROLE ONLY
    * Attempting to register with other roles will be rejected
+   * RATE LIMITED: 5 attempts per 15 minutes per IP
    */
-  router.post('/register', async (req: Request, res: Response): Promise<void> => {
+  router.post('/register', authLimiter, async (req: Request, res: Response): Promise<void> => {
     try {
       const { email, password, firstName, lastName, phone } = req.body;
 
@@ -27,6 +44,10 @@ export function createAuthRoutes(pool: Pool): Router {
         return;
       }
 
+      // Extract IP address and User-Agent for audit logging
+      const ipAddress = req.ip || req.connection.remoteAddress || 'unknown';
+      const userAgent = req.get('user-agent') || 'unknown';
+
       // Note: role and team are ignored in public registration
       // All public registrations are created as new_hire with no team
       const result = await authService.register({
@@ -35,7 +56,7 @@ export function createAuthRoutes(pool: Pool): Router {
         firstName,
         lastName,
         phone,
-      });
+      }, ipAddress, userAgent);
 
       res.status(201).json({
         token: result.token,
@@ -75,15 +96,24 @@ export function createAuthRoutes(pool: Pool): Router {
           return;
         }
 
-        const result = await authService.createUser({
-          email,
-          password,
-          firstName,
-          lastName,
-          role,
-          team,
-          phone,
-        });
+        // Extract IP address and User-Agent for audit logging
+        const ipAddress = req.ip || req.connection.remoteAddress || 'unknown';
+        const userAgent = req.get('user-agent') || 'unknown';
+
+        const result = await authService.createUser(
+          {
+            email,
+            password,
+            firstName,
+            lastName,
+            role,
+            team,
+            phone,
+          },
+          req.user?.userId,
+          ipAddress,
+          userAgent
+        );
 
         res.status(201).json({
           token: result.token,
@@ -105,8 +135,9 @@ export function createAuthRoutes(pool: Pool): Router {
   /**
    * POST /auth/login
    * Login with email and password
+   * RATE LIMITED: 5 attempts per 15 minutes per IP
    */
-  router.post('/login', async (req: Request, res: Response): Promise<void> => {
+  router.post('/login', authLimiter, async (req: Request, res: Response): Promise<void> => {
     try {
       const { email, password } = req.body;
 
@@ -162,7 +193,11 @@ export function createAuthRoutes(pool: Pool): Router {
         return;
       }
 
-      await authService.changePassword(req.user.userId, currentPassword, newPassword);
+      // Extract IP address and User-Agent for audit logging
+      const ipAddress = req.ip || req.connection.remoteAddress || 'unknown';
+      const userAgent = req.get('user-agent') || 'unknown';
+
+      await authService.changePassword(req.user.userId, currentPassword, newPassword, ipAddress, userAgent);
 
       res.status(200).json({
         message: 'Password changed successfully',
@@ -199,7 +234,11 @@ export function createAuthRoutes(pool: Pool): Router {
           return;
         }
 
-        await authService.resetPassword(userId, newPassword);
+        // Extract IP address and User-Agent for audit logging
+        const ipAddress = req.ip || req.connection.remoteAddress || 'unknown';
+        const userAgent = req.get('user-agent') || 'unknown';
+
+        await authService.resetPassword(userId, newPassword, req.user?.userId, ipAddress, userAgent);
 
         res.status(200).json({
           message: 'Password reset successfully',

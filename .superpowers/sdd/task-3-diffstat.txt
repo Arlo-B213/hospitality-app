@@ -1,0 +1,12 @@
+ .superpowers/sdd/progress.md                  |  108 +
+ .superpowers/sdd/task-1-fix-round-1.txt       | 1351 ++++++++++
+ .superpowers/sdd/task-1-fix-round-2-final.txt |  890 +++++++
+ .superpowers/sdd/task-1-review.txt            | 1143 +++++++++
+ .superpowers/sdd/task-2-fix-final.txt         |    1 +
+ .superpowers/sdd/task-2-review.txt            | 3301 +++++++++++++++++++++++++
+ backend/package.json                          |    2 +
+ backend/src/models/NewHire.ts                 |  183 ++
+ backend/src/routes/newHires.ts                |  384 +++
+ backend/src/server.ts                         |    5 +
+ backend/tests/newHires.test.ts                |  708 ++++++
+ 11 files changed, 8076 insertions(+)

@@ -21,7 +21,7 @@ export function generateToken(payload: TokenPayload): string {
     throw new Error('JWT_SECRET is not configured in environment variables');
   }
 
-  const expiresIn = process.env.JWT_EXPIRATION || '7d';
+  const expiresIn = process.env.JWT_EXPIRATION || '1h';
 
   return jwt.sign(payload, secret, { expiresIn } as any);
 }
