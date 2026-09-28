@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: pride_training_db
+    environment:
+      POSTGRES_USER: pride_user
+      POSTGRES_PASSWORD: pride_password
+      POSTGRES_DB: pride_training_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./backend/src/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pride_user -d pride_training_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pride_network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  pride_network:
+    driver: bridge

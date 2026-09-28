@@ -1,0 +1,59 @@
+{
+  "name": "Pride Training App",
+  "short_name": "Pride",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#4F46E5",
+  "background_color": "#FFFFFF",
+  "orientation": "portrait-primary",
+  "description": "Pride Training App for employee evaluation and analytics",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/icons/screenshot-mobile.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/dashboard",
+      "description": "View the training dashboard"
+    },
+    {
+      "name": "Analytics",
+      "url": "/analytics",
+      "description": "View analytics and reports"
+    },
+    {
+      "name": "Evaluation",
+      "url": "/evaluation",
+      "description": "Evaluate new hires"
+    }
+  ]
+}
