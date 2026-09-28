@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Alexandra Patel",
+    "email": "alexandra.patel@pride.app",
+    "department": "FOH",
+    "start_date": "2024-10-01",
+    "role": "foh_lead",
+    "hire_date": "2024-09-25"
+  },
+  {
+    "name": "Lucas Ferreira",
+    "email": "lucas.ferreira@pride.app",
+    "department": "FOH",
+    "start_date": "2024-10-05",
+    "role": "new_hire",
+    "hire_date": "2024-10-03"
+  },
+  {
+    "name": "Isabella Silva",
+    "email": "isabella.silva@pride.app",
+    "department": "FOH",
+    "start_date": "2024-10-08",
+    "role": "new_hire",
+    "hire_date": "2024-10-06"
+  },
+  {
+    "name": "François Beaumont",
+    "email": "francois.beaumont@pride.app",
+    "department": "BOH",
+    "start_date": "2024-09-30",
+    "role": "chef",
+    "hire_date": "2024-09-20"
+  },
+  {
+    "name": "Hiroshi Tanaka",
+    "email": "hiroshi.tanaka@pride.app",
+    "department": "BOH",
+    "start_date": "2024-10-02",
+    "role": "sous_chef",
+    "hire_date": "2024-09-30"
+  },
+  {
+    "name": "Carlos Hernandez",
+    "email": "carlos.hernandez@pride.app",
+    "department": "BOH",
+    "start_date": "2024-10-07",
+    "role": "asst_chef",
+    "hire_date": "2024-10-05"
+  }
+]

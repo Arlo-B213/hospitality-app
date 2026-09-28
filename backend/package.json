@@ -9,7 +9,10 @@
     "start": "node dist/server.js",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.ts",
+    "init:db": "node scripts/init-db.js",
+    "import:csv": "node scripts/import-csv.js",
+    "import:json": "node scripts/import-json.js"
   },
   "keywords": [
     "onboarding",

@@ -1,0 +1,8 @@
+name,email,department,start_date,role,hire_date
+Valid User,valid.user@pride.app,FOH,2024-09-15,foh_lead,2024-09-10
+Missing Email,invalid-email-format.com,FOH,2024-09-15,foh_lead,2024-09-10
+Bad Department,bad.dept@pride.app,INVALID,2024-09-15,foh_lead,2024-09-10
+Invalid Date,invalid.date@pride.app,FOH,2024-13-45,foh_lead,2024-09-10
+Bad Role,bad.role@pride.app,FOH,2024-09-15,not_a_role,2024-09-10
+,missing.name@pride.app,BOH,2024-09-20,chef,2024-09-18
+Another Valid,another.valid@pride.app,BOH,2024-09-20,sous_chef,2024-09-18
