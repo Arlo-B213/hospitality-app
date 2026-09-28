@@ -24,12 +24,12 @@ export default function SignupForm({
         <input type="email" name="email" required className={inputClass} />
       </label>
       <label className="block space-y-1">
-        <span className="text-sm text-neutral-400">Password (min 8 chars)</span>
+        <span className="text-sm text-neutral-400">Password (min 12 chars, uppercase, number, special char)</span>
         <input
           type="password"
           name="password"
           required
-          minLength={8}
+          minLength={12}
           className={inputClass}
         />
       </label>
