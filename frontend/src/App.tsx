@@ -8,6 +8,7 @@ import { DashboardPage } from './pages/DashboardPage'
 import { EvaluationPage } from './pages/EvaluationPage'
 import { AnalyticsPage } from './pages/AnalyticsPage'
 import { SettingsPage } from './pages/SettingsPage'
+import { TrainingMilestonesPage } from './pages/TrainingMilestonesPage'
 import { useServiceWorker } from './hooks/useServiceWorker'
 
 /**
@@ -174,6 +175,14 @@ const App: React.FC = () => {
               element={
                 <ProtectedRoute>
                   <SettingsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/training-milestones"
+              element={
+                <ProtectedRoute>
+                  <TrainingMilestonesPage />
                 </ProtectedRoute>
               }
             />

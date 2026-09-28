@@ -84,6 +84,13 @@ export const DashboardPage: React.FC = () => {
               <h1 className="text-2xl font-bold text-gray-900">PRIDE Training</h1>
             </div>
             <div className="flex items-center gap-4">
+              <Link
+                to="/training-milestones"
+                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+                title="Training Guide"
+              >
+                📋 Training Guide
+              </Link>
               <SyncStatus
                 status={status}
                 isOnline={isOnline}
@@ -195,6 +202,9 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Today's Review Focus Card */}
+        <CurrentMilestoneCard newHires={newHires} />
+
         {/* Filter Bar */}
         <FilterBar filters={filters} onFilterChange={setFilters} />
 
@@ -253,6 +263,104 @@ export const DashboardPage: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+    </div>
+  )
+}
+
+function CurrentMilestoneCard({ newHires }: { newHires: any[] }) {
+  const today = new Date()
+
+  const calculateDaysSinceStart = (startDate: string) => {
+    const start = new Date(startDate)
+    return Math.floor((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
+  }
+
+  // Find new hires at each milestone today (with a 5-day window)
+  const atDay30 = newHires.filter((hire) => {
+    const daysSince = calculateDaysSinceStart(hire.start_date)
+    return daysSince >= 25 && daysSince <= 35
+  })
+
+  const atDay60 = newHires.filter((hire) => {
+    const daysSince = calculateDaysSinceStart(hire.start_date)
+    return daysSince >= 55 && daysSince <= 65
+  })
+
+  const atDay90 = newHires.filter((hire) => {
+    const daysSince = calculateDaysSinceStart(hire.start_date)
+    return daysSince >= 85 && daysSince <= 95
+  })
+
+  const totalAtMilestone = atDay30.length + atDay60.length + atDay90.length
+
+  return (
+    <div className="mb-8 bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900">Today's Review Focus</h3>
+          <p className="text-gray-600 text-sm mt-1">Current milestone checkpoints for this week</p>
+        </div>
+        <Link
+          to="/training-milestones"
+          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
+        >
+          View Full Guide
+        </Link>
+      </div>
+
+      {totalAtMilestone > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {atDay30.length > 0 && (
+            <div className="bg-green-50 border border-green-200 rounded p-3">
+              <p className="font-semibold text-green-900 text-sm mb-2">
+                🌱 Day 30 - Foundation Phase
+              </p>
+              <p className="text-sm text-gray-700">
+                {atDay30.length} {atDay30.length === 1 ? 'employee' : 'employees'} to review
+              </p>
+              <p className="text-xs text-gray-600 mt-1">Expected: 40-50% proficiency</p>
+            </div>
+          )}
+          {atDay60.length > 0 && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
+              <p className="font-semibold text-yellow-900 text-sm mb-2">
+                🌿 Day 60 - Development Phase
+              </p>
+              <p className="text-sm text-gray-700">
+                {atDay60.length} {atDay60.length === 1 ? 'employee' : 'employees'} to review
+              </p>
+              <p className="text-xs text-gray-600 mt-1">Expected: 70-80% proficiency</p>
+            </div>
+          )}
+          {atDay90.length > 0 && (
+            <div className="bg-blue-50 border border-blue-200 rounded p-3">
+              <p className="font-semibold text-blue-900 text-sm mb-2">
+                🌳 Day 90 - Mastery Phase
+              </p>
+              <p className="text-sm text-gray-700">
+                {atDay90.length} {atDay90.length === 1 ? 'employee' : 'employees'} to review
+              </p>
+              <p className="text-xs text-gray-600 mt-1">Expected: 90-100% proficiency</p>
+            </div>
+          )}
+        </div>
+      ) : (
+        <p className="text-gray-600 text-sm">
+          No employees at milestone checkpoints this week. Next review scheduled in{' '}
+          {newHires.length > 0
+            ? Math.min(
+                ...newHires.map((h) => {
+                  const daysSince = calculateDaysSinceStart(h.start_date)
+                  if (daysSince < 25)
+                    return 25 - daysSince
+                  if (daysSince < 55) return 55 - daysSince
+                  return 85 - daysSince
+                })
+              )
+            : 'N/A'}{' '}
+          days.
+        </p>
       )}
     </div>
   )

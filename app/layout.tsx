@@ -25,6 +25,7 @@ const NAV = [
   { href: "/daily-audit", label: "Daily Audit" },
   { href: "/quiz", label: "Situational Quiz" },
   { href: "/assessment", label: "Skills Assessment" },
+  { href: "/training-guide", label: "Training Guide" },
 ];
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
