@@ -5,6 +5,32 @@ import { createSessionCookie, hashPassword } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import type { OutletTier, Role } from "@prisma/client";
 
+// Validate password against security requirements
+function validatePassword(password: string): {
+  isValid: boolean;
+  errors: string[];
+} {
+  const errors: string[] = [];
+
+  if (password.length < 12) {
+    errors.push("at least 12 characters");
+  }
+  if (!/[A-Z]/.test(password)) {
+    errors.push("at least 1 uppercase letter (A-Z)");
+  }
+  if (!/[0-9]/.test(password)) {
+    errors.push("at least 1 number (0-9)");
+  }
+  if (!/[!@#$%^&*]/.test(password)) {
+    errors.push("at least 1 special character (!@#$%^&*)");
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+  };
+}
+
 export async function signup(
   _prevState: { error?: string } | undefined,
   formData: FormData
@@ -18,8 +44,13 @@ export async function signup(
   if (!name || !email || !password) {
     return { error: "All fields are required." };
   }
-  if (password.length < 8) {
-    return { error: "Password must be at least 8 characters." };
+
+  const passwordValidation = validatePassword(password);
+  if (!passwordValidation.isValid) {
+    const requirements = passwordValidation.errors.join(", ");
+    return {
+      error: `Password must have ${requirements}.`,
+    };
   }
 
   const existing = await prisma.user.findUnique({ where: { email } });
