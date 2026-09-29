@@ -9,28 +9,28 @@ const MODULES = [
     title: "Pre-Shift Builder",
     desc: "The 5-minute engine start: Focus, Clarity, Energy, Interactive.",
     icon: "Zap",
-    color: "from-blue-500/20 to-blue-600/20",
+    color: "from-blue-500/25 to-blue-600/15",
   },
   {
     href: "/daily-audit",
     title: "Daily Audit & Recap Log",
     desc: "Shift-lead close-out: transaction standards, ticket times, soft-skill spot checks, non-negotiables.",
     icon: "FileText",
-    color: "from-green-500/20 to-emerald-600/20",
+    color: "from-emerald-500/25 to-teal-600/15",
   },
   {
     href: "/quiz",
     title: "Situational Quiz",
     desc: "120 floor-real scenarios mapped to the 5 Pillars, filtered to your outlet's tier.",
     icon: "BookOpen",
-    color: "from-purple-500/20 to-purple-600/20",
+    color: "from-purple-500/25 to-violet-600/15",
   },
   {
     href: "/assessment",
     title: "Skills Assessment",
     desc: "Self vs. supervisor rubric scoring across the 5 Pillars, with archetype reveal.",
     icon: "Target",
-    color: "from-red-500/20 to-red-600/20",
+    color: "from-red-500/25 to-red-600/15",
   },
 ];
 

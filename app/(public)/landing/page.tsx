@@ -16,73 +16,80 @@ import {
   Star,
   Lightning,
   Rocket,
+  ShieldCheck,
+  Trophy,
 } from '@phosphor-icons/react';
 import { useState, useEffect } from 'react';
 
 // ============================================================================
-// PRIDE LANDING PAGE - MAXIMUM ANIMATIONS & PROFESSIONAL ICONS
+// PRIDE LUXURY LANDING PAGE - MARKETING-GRADE PREMIUM DESIGN
 // ============================================================================
-// Enhanced landing page with 6 sections:
-// 1. Hero Journey (90-day timeline with parallax)
-// 2. Manager Section (animated metrics with counters)
-// 3. Leads Section (cascade reveals with spotlight borders)
-// 4. New Hires Section (sequential milestone animations)
-// 5. Social Proof (carousel with smooth transitions)
-// 6. CTA Footer (gradient animations & text reveals)
+// Luxury redesign with premium visual hierarchy, sophisticated color palette,
+// glassmorphism effects, refined animations, and premium typography.
+// Sections:
+// 1. Hero (luxury asymmetric layout, maximum whitespace)
+// 2. Manager Section (glass cards with premium shadows)
+// 3. Leads Section (bento grid, glassmorphism, premium borders)
+// 4. Milestones (premium timeline with gradient cards)
+// 5. Social Proof (luxury testimonial cards with ratings)
+// 6. CTA Footer (premium centered layout with trust badges)
 
-const PRIDE_COLORS = {
-  accent: '#dc2626', // Bold Dark Red
-  secondary: '#f59e0b', // Warm Gold
-  surface: '#f9fafb', // Off-White
-  text: '#18181b', // Zinc-950
-  muted: '#71717a', // Zinc-600
-  border: '#e4e4e7', // Zinc-200
+const LUXURY_COLORS = {
+  accent: '#dc2626', // Bold Red (strategic accent)
+  text: '#0f0f0f', // Deep Charcoal (premium text)
+  background: '#f8f8f8', // Cream/Platinum (luxury base)
+  surface: '#ffffff', // Pure White (card backgrounds)
+  secondary: '#1e293b', // Navy (secondary depth)
+  gold: '#d4af37', // Luxury Gold (premium accents)
+  muted: '#6b7280', // Gray (refined text)
+  border: '#e5e5e5', // Subtle Silver (refined borders)
 };
 
 // ============================================================================
-// ANIMATION VARIANTS
+// LUXURY ANIMATION VARIANTS (Slower, Refined, Sophisticated)
 // ============================================================================
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.2,
+      staggerChildren: 0.06, // Refined stagger
+      delayChildren: 0.15,
     },
   },
 } as const;
 
+// Luxury entrance: fade + subtle scale
 const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: 'spring' as const, stiffness: 80, damping: 18 },
+    transition: { type: 'spring' as const, stiffness: 60, damping: 30 }, // Smooth, elegant
   },
 } as const;
 
-// Cascade reveal for cards
+// Cascade reveal for luxury cards
 const cascadeVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.92 },
+  hidden: { opacity: 0, y: 30, scale: 0.95 },
   visible: (idx: number) => ({
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      delay: idx * 0.15,
+      delay: idx * 0.06,
       type: 'spring' as const,
-      stiffness: 90,
-      damping: 20,
+      stiffness: 60,
+      damping: 30, // Smooth luxury feel
     },
   }),
 } as const;
 
-// Float animation
+// Luxury float animation: subtle, slow breathing
 const floatVariants = {
   float: {
-    y: [0, -20, 0],
-    transition: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
+    y: [0, -12, 0],
+    transition: { duration: 5, repeat: Infinity, ease: 'easeInOut' }, // Slower, sophisticated
   },
 };
 
@@ -116,163 +123,207 @@ const CounterAnimation = ({ value, duration = 2 }: { value: number; duration?: n
 };
 
 // ============================================================================
-// SECTION 1: HERO - 90-Day Journey with Parallax & Maximum Animations
+// SECTION 1: HERO - Luxury Asymmetric Layout with Premium Spacing
 // ============================================================================
 function HeroSection() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const { clientX, clientY } = e;
-    const { innerWidth, innerHeight } = window;
-    setMousePosition({
-      x: (clientX - innerWidth / 2) * 0.02,
-      y: (clientY - innerHeight / 2) * 0.02,
-    });
-  };
-
   return (
     <section
-      className="relative min-h-[100dvh] overflow-hidden bg-gradient-to-br from-white via-emerald-50/30 to-amber-50/30"
-      onMouseMove={handleMouseMove}
+      className="relative min-h-screen overflow-hidden"
+      style={{ backgroundColor: LUXURY_COLORS.background }}
     >
-      {/* Animated Background Blobs */}
+      {/* Premium Gradient Overlay (45° diagonal) */}
       <motion.div
-        className="absolute -top-40 -right-40 w-96 h-96 rounded-full opacity-20 blur-3xl"
+        className="absolute inset-0 opacity-40"
         style={{
-          background: `linear-gradient(135deg, ${PRIDE_COLORS.accent}, ${PRIDE_COLORS.secondary})`,
+          background: `linear-gradient(45deg, ${LUXURY_COLORS.accent}08, transparent 60%)`,
+        }}
+      />
+
+      {/* Subtle Animated Blobs - Minimal, Refined */}
+      <motion.div
+        className="absolute -top-96 -right-96 w-[800px] h-[800px] rounded-full opacity-5"
+        style={{
+          background: `radial-gradient(circle, ${LUXURY_COLORS.accent}, transparent)`,
         }}
         animate={{
-          y: [0, 40, 0],
-          x: [0, 30, 0],
-          scale: [1, 1.1, 1],
+          scale: [1, 1.05, 1],
         }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
       />
 
       <motion.div
-        className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full opacity-15 blur-3xl"
+        className="absolute -bottom-96 -left-96 w-[800px] h-[800px] rounded-full opacity-5"
         style={{
-          background: `linear-gradient(135deg, ${PRIDE_COLORS.secondary}, ${PRIDE_COLORS.accent})`,
+          background: `radial-gradient(circle, ${LUXURY_COLORS.secondary}, transparent)`,
         }}
         animate={{
-          y: [0, -40, 0],
-          x: [0, -30, 0],
-          scale: [1, 0.9, 1],
+          scale: [1.05, 1, 1.05],
         }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
       />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-28">
+      <div
+        className="relative max-w-7xl mx-auto px-[10vw] py-32 md:py-40 flex items-center justify-between gap-20"
+      >
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center"
+          className="flex-1 max-w-2xl"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
         >
-          {/* Left: Hero Text */}
-          <motion.div className="order-2 md:order-1" variants={itemVariants}>
-            <motion.div className="flex items-center gap-3 mb-6" variants={itemVariants}>
-              <motion.div
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                <Rocket size={32} weight="bold" color={PRIDE_COLORS.accent} />
-              </motion.div>
-              <span
-                className="text-sm font-bold uppercase tracking-widest"
-                style={{ color: PRIDE_COLORS.accent }}
-              >
-                Transform Your Team
-              </span>
-            </motion.div>
-
-            <motion.h1
-              className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight mb-8"
-              style={{ color: PRIDE_COLORS.text }}
-              variants={itemVariants}
-            >
-              Transform Your Onboarding in{' '}
-              <motion.span
-                style={{ color: PRIDE_COLORS.accent }}
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                90 Days
-              </motion.span>
-            </motion.h1>
-
-            <motion.p
-              className="text-lg md:text-xl mb-10 leading-relaxed max-w-[65ch]"
-              style={{ color: PRIDE_COLORS.muted }}
-              variants={itemVariants}
-            >
-              Real-time evaluations. Measurable growth. One platform.
-            </motion.p>
-
-            {/* CTA Buttons with Magnetic Hover */}
-            <motion.div
-              className="flex flex-col sm:flex-row gap-6"
-              variants={itemVariants}
-            >
-              <motion.button
-                className="px-10 py-4 rounded-full font-bold text-lg text-white transition-all relative overflow-hidden group"
-                style={{ backgroundColor: PRIDE_COLORS.accent }}
-                whileHover={{ scale: 1.08, y: -4 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <motion.span
-                  className="absolute inset-0 opacity-0 group-hover:opacity-20"
-                  style={{ backgroundColor: '#ffffff' }}
-                  animate={{ x: ['-100%', '100%'] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
-                Start Free Trial
-              </motion.button>
-
-              <motion.button
-                className="px-10 py-4 rounded-full font-bold text-lg border-2 transition-all"
-                style={{
-                  color: PRIDE_COLORS.accent,
-                  borderColor: PRIDE_COLORS.accent,
-                }}
-                whileHover={{ scale: 1.08, y: -4, backgroundColor: `${PRIDE_COLORS.accent}10` }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Request Demo
-              </motion.button>
-            </motion.div>
-          </motion.div>
-
-          {/* Right: Hero Visual with Parallax */}
+          {/* Premium Badge */}
           <motion.div
-            className="order-1 md:order-2"
-            variants={itemVariants}
+            className="inline-flex items-center gap-3 mb-8 px-4 py-2 rounded-full"
             style={{
-              x: mousePosition.x,
-              y: mousePosition.y,
+              backgroundColor: `${LUXURY_COLORS.accent}10`,
+              border: `1px solid ${LUXURY_COLORS.border}`,
             }}
-            transition={{ type: 'spring', stiffness: 100, damping: 30 }}
+            variants={itemVariants}
           >
-            <TimelineVisualization />
+            <motion.div
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 4, repeat: Infinity }}
+            >
+              <Crown size={18} weight="bold" color={LUXURY_COLORS.accent} />
+            </motion.div>
+            <span
+              className="text-sm font-semibold tracking-wide"
+              style={{ color: LUXURY_COLORS.accent }}
+            >
+              Trusted by 50+ Premium Brands
+            </span>
           </motion.div>
+
+          {/* Premium Hero Headline: 60-80px clamp */}
+          <motion.h1
+            className="text-[clamp(48px,8vw,80px)] font-800 tracking-tight leading-[1.15] mb-10"
+            style={{ color: LUXURY_COLORS.text }}
+            variants={itemVariants}
+          >
+            Transform Your Onboarding in{' '}
+            <motion.span
+              style={{ color: LUXURY_COLORS.accent }}
+              animate={{ opacity: [1, 0.8, 1] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              90 Days
+            </motion.span>
+          </motion.h1>
+
+          {/* Premium Subheading: 18-20px */}
+          <motion.p
+            className="text-[18px] md:text-[20px] font-400 leading-[1.7] mb-14 max-w-[65ch]"
+            style={{ color: LUXURY_COLORS.muted }}
+            variants={itemVariants}
+          >
+            Real-time evaluations, measurable growth, and genuine team development. PRIDE is the platform trusted by hospitality's most premium brands.
+          </motion.p>
+
+          {/* Premium CTA Buttons */}
+          <motion.div
+            className="flex flex-col sm:flex-row gap-6"
+            variants={itemVariants}
+          >
+            <motion.button
+              className="px-10 py-4 rounded-full font-bold text-lg text-white relative overflow-hidden group"
+              style={{
+                backgroundColor: LUXURY_COLORS.accent,
+                boxShadow: `0 20px 60px ${LUXURY_COLORS.accent}20, 0 4px 12px ${LUXURY_COLORS.accent}10`,
+              }}
+              whileHover={{
+                scale: 1.02,
+                y: -2,
+                boxShadow: `0 30px 70px ${LUXURY_COLORS.accent}30, 0 6px 16px ${LUXURY_COLORS.accent}15`,
+              }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <motion.span
+                className="absolute inset-0 opacity-0 group-hover:opacity-15"
+                style={{ backgroundColor: '#ffffff' }}
+                animate={{ x: ['-100%', '100%'] }}
+                transition={{ duration: 1.2, repeat: Infinity }}
+              />
+              <span className="relative">Start Free Trial</span>
+            </motion.button>
+
+            <motion.button
+              className="px-10 py-4 rounded-full font-bold text-lg border transition-all group"
+              style={{
+                color: LUXURY_COLORS.accent,
+                borderColor: LUXURY_COLORS.border,
+                borderWidth: '1px',
+                backgroundColor: 'transparent',
+              }}
+              whileHover={{
+                scale: 1.02,
+                y: -2,
+                backgroundColor: `${LUXURY_COLORS.accent}08`,
+                borderColor: LUXURY_COLORS.accent,
+              }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className="relative">Request Demo</span>
+            </motion.button>
+          </motion.div>
+
+          {/* Trust Indicators */}
+          <motion.div
+            className="mt-16 flex flex-wrap gap-8"
+            variants={itemVariants}
+          >
+            {[
+              { icon: ShieldCheck, text: 'Free Setup, 5 Team Members' },
+              { icon: Trophy, text: 'Industry-Leading Support' },
+            ].map((item, idx) => {
+              const IconComponent = item.icon;
+              return (
+                <motion.div
+                  key={idx}
+                  className="flex items-center gap-3"
+                  animate={{ y: [0, -3, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: idx * 0.2 }}
+                >
+                  <IconComponent
+                    size={20}
+                    weight="bold"
+                    color={LUXURY_COLORS.accent}
+                  />
+                  <span
+                    className="text-sm font-500"
+                    style={{ color: LUXURY_COLORS.muted }}
+                  >
+                    {item.text}
+                  </span>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </motion.div>
+
+        {/* Right: Premium Timeline Visualization */}
+        <motion.div
+          className="hidden lg:block flex-1"
+          variants={itemVariants}
+        >
+          <TimelineVisualization />
         </motion.div>
       </div>
     </section>
   );
 }
 
-// Animated 90-Day Timeline with Professional Icons
+// Premium Timeline Visualization with Luxury Styling
 function TimelineVisualization() {
   const milestones = [
-    { day: 1, label: 'Foundation', color: PRIDE_COLORS.accent, icon: Flag },
-    { day: 30, label: 'Development', color: PRIDE_COLORS.secondary, icon: Target },
-    { day: 90, label: 'Mastery', color: PRIDE_COLORS.accent, icon: Crown },
+    { day: 1, label: 'Foundation', icon: Flag },
+    { day: 30, label: 'Development', icon: Target },
+    { day: 90, label: 'Mastery', icon: Crown },
   ];
 
   return (
-    <div className="relative h-96 flex items-center justify-center">
-      {/* Animated Timeline Line */}
+    <div className="relative h-80 flex items-center justify-center">
+      {/* Luxury Timeline Line */}
       <svg viewBox="0 0 300 250" className="w-full h-full absolute inset-0">
         {/* Background Timeline Line */}
         <motion.line
@@ -280,26 +331,34 @@ function TimelineVisualization() {
           y1="120"
           x2="280"
           y2="120"
-          stroke={PRIDE_COLORS.border}
-          strokeWidth="3"
+          stroke={LUXURY_COLORS.border}
+          strokeWidth="1"
           initial={{ pathLength: 0 }}
           whileInView={{ pathLength: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
         />
 
-        {/* Animated Progress Line */}
+        {/* Premium Gradient Line */}
+        <defs>
+          <linearGradient id="gradientLine" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={LUXURY_COLORS.accent} stopOpacity="0.3" />
+            <stop offset="50%" stopColor={LUXURY_COLORS.accent} stopOpacity="1" />
+            <stop offset="100%" stopColor={LUXURY_COLORS.accent} stopOpacity="0.3" />
+          </linearGradient>
+        </defs>
+
         <motion.line
           x1="20"
           y1="120"
           x2="280"
           y2="120"
-          stroke={PRIDE_COLORS.accent}
-          strokeWidth="3"
+          stroke="url(#gradientLine)"
+          strokeWidth="2"
           initial={{ pathLength: 0 }}
           whileInView={{ pathLength: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 2, ease: 'easeInOut', delay: 0.2 }}
+          transition={{ duration: 1.8, ease: 'easeInOut', delay: 0.2 }}
         />
       </svg>
 
@@ -312,43 +371,52 @@ function TimelineVisualization() {
             <motion.div
               key={idx}
               className="relative flex flex-col items-center"
-              initial={{ opacity: 0, scale: 0 }}
+              initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{
-                delay: idx * 0.3 + 0.3,
+                delay: idx * 0.2 + 0.2,
                 type: 'spring',
-                stiffness: 120,
-                damping: 20,
+                stiffness: 60,
+                damping: 30,
               }}
             >
-              {/* Outer Pulse Ring */}
+              {/* Premium Pulse Ring */}
               <motion.div
-                className="absolute w-24 h-24 rounded-full"
+                className="absolute w-20 h-20 rounded-full"
                 style={{
-                  border: `2px solid ${milestone.color}`,
-                  opacity: 0.3,
+                  border: `1px solid ${LUXURY_COLORS.accent}`,
+                  opacity: 0.4,
                 }}
-                animate={{ scale: [1, 1.3, 1] }}
-                transition={{ duration: 2, repeat: Infinity, delay: idx * 0.3 }}
+                animate={{ scale: [1, 1.25, 1] }}
+                transition={{ duration: 3, repeat: Infinity, delay: idx * 0.3 }}
               />
 
-              {/* Icon Circle */}
+              {/* Icon Circle with Shadow */}
               <motion.div
-                className="relative w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-2xl z-10 mb-8"
-                style={{ backgroundColor: milestone.color }}
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 2, repeat: Infinity, delay: idx * 0.2 }}
+                className="relative w-14 h-14 rounded-full flex items-center justify-center text-white z-10 mb-8"
+                style={{
+                  backgroundColor: LUXURY_COLORS.accent,
+                  boxShadow: `0 12px 32px ${LUXURY_COLORS.accent}25, 0 2px 8px ${LUXURY_COLORS.accent}15`,
+                }}
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 3.5, repeat: Infinity, delay: idx * 0.15 }}
               >
-                <IconComponent size={32} weight="bold" />
+                <IconComponent size={28} weight="bold" />
               </motion.div>
 
-              {/* Labels */}
-              <motion.div className="text-center mt-4" initial={{ opacity: 0, y: 10 }}>
-                <div className="text-sm font-bold" style={{ color: milestone.color }}>
+              {/* Premium Labels */}
+              <motion.div className="text-center mt-4" initial={{ opacity: 0, y: 8 }}>
+                <div
+                  className="text-xs font-bold uppercase tracking-wide"
+                  style={{ color: LUXURY_COLORS.accent }}
+                >
                   Day {milestone.day}
                 </div>
-                <div className="text-lg font-bold mt-1" style={{ color: PRIDE_COLORS.text }}>
+                <div
+                  className="text-base font-bold mt-2"
+                  style={{ color: LUXURY_COLORS.text }}
+                >
                   {milestone.label}
                 </div>
               </motion.div>
@@ -361,36 +429,40 @@ function TimelineVisualization() {
 }
 
 // ============================================================================
-// SECTION 2: MANAGER SECTION - Animated Metrics with Professional Icons
+// SECTION 2: MANAGER SECTION - Premium Glass Cards with Luxury Metrics
 // ============================================================================
 function ManagerSection() {
   const metrics = [
     {
       value: 40,
       label: 'Higher Retention',
-      description: 'New hires stay longer',
+      description: 'New hires stay longer with measurable growth',
       icon: ArrowUpRight,
     },
     {
       value: 60,
       label: 'Time Saved',
-      description: 'Hours per hire',
+      description: 'Hours saved per hire in evaluations',
       icon: Clock,
     },
     {
       value: 100,
       label: 'Team Participation',
-      description: 'Real-time updates',
+      description: 'Real-time participation and engagement',
       icon: Users,
     },
   ];
 
   return (
-    <section className="py-24 md:py-40 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      className="py-32 md:py-40"
+      style={{ backgroundColor: LUXURY_COLORS.background }}
+    >
+      <div className="max-w-7xl mx-auto px-[10vw]">
+        {/* Premium Section Headline */}
         <motion.h2
-          className="text-4xl md:text-6xl font-bold tracking-tight mb-20"
-          style={{ color: PRIDE_COLORS.text }}
+          className="text-[clamp(36px,6vw,48px)] font-bold tracking-tight leading-[1.2] mb-24"
+          style={{ color: LUXURY_COLORS.text }}
           variants={itemVariants}
           initial="hidden"
           whileInView="visible"
@@ -399,6 +471,7 @@ function ManagerSection() {
           Real-Time Visibility Into Your Team's Growth
         </motion.h2>
 
+        {/* Premium 3-Column Glass Grid */}
         <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-10"
           variants={containerVariants}
@@ -412,65 +485,87 @@ function ManagerSection() {
             return (
               <motion.div
                 key={idx}
-                className="p-12 rounded-3xl border relative overflow-hidden group"
+                className="p-12 rounded-3xl relative overflow-hidden group"
                 style={{
-                  borderColor: PRIDE_COLORS.border,
-                  backgroundColor: PRIDE_COLORS.surface,
+                  backgroundColor: LUXURY_COLORS.surface,
+                  border: `1px solid ${LUXURY_COLORS.border}`,
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  boxShadow: `0 20px 60px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04)`,
                 }}
                 variants={cascadeVariants}
                 custom={idx}
                 whileHover={{
-                  y: -12,
-                  boxShadow: `0 30px 60px rgba(220, 38, 38, 0.15)`,
+                  y: -8,
+                  boxShadow: `0 40px 80px rgba(220,38,38,0.12), 0 8px 20px rgba(0,0,0,0.08)`,
                 }}
               >
-                {/* Animated Background Gradient on Hover */}
+                {/* Hover Gradient Effect */}
                 <motion.div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100"
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none"
                   style={{
-                    background: `radial-gradient(circle at 50% 50%, ${PRIDE_COLORS.accent}10, transparent)`,
+                    background: `radial-gradient(circle at 50% 50%, ${LUXURY_COLORS.accent}08, transparent 70%)`,
                   }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.4 }}
                 />
 
-                {/* Icon */}
+                {/* Premium Icon */}
                 <motion.div
-                  className="mb-8"
-                  animate={{ rotate: [0, 5, -5, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, delay: idx * 0.2 }}
+                  className="mb-10 relative z-10"
+                  animate={{ rotate: [0, 3, -3, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, delay: idx * 0.2 }}
                 >
-                  <IconComponent size={48} color={PRIDE_COLORS.accent} weight="bold" />
+                  <IconComponent
+                    size={48}
+                    color={LUXURY_COLORS.accent}
+                    weight="bold"
+                  />
                 </motion.div>
 
-                {/* Animated Counter */}
+                {/* Premium Counter */}
                 <motion.div
-                  className="text-6xl font-bold mb-4 relative z-10"
-                  style={{ color: PRIDE_COLORS.accent }}
+                  className="text-[clamp(48px,8vw,72px)] font-bold mb-6 relative z-10 leading-none"
+                  style={{ color: LUXURY_COLORS.accent }}
                 >
-                  <CounterAnimation value={metric.value} duration={2} />%
+                  <CounterAnimation value={metric.value} duration={2.5} />
+                  <span className="text-4xl">%</span>
                 </motion.div>
 
+                {/* Premium Label */}
                 <motion.div
-                  className="text-xl font-semibold mb-3 relative z-10"
-                  style={{ color: PRIDE_COLORS.text }}
+                  className="text-lg font-bold mb-4 relative z-10"
+                  style={{ color: LUXURY_COLORS.text }}
                 >
                   {metric.label}
                 </motion.div>
 
+                {/* Premium Description */}
                 <motion.div
-                  className="relative z-10"
-                  style={{ color: PRIDE_COLORS.muted }}
+                  className="text-base leading-relaxed relative z-10"
+                  style={{ color: LUXURY_COLORS.muted }}
                 >
                   {metric.description}
                 </motion.div>
 
-                {/* Pulse Animation */}
+                {/* Subtle Live Indicator */}
                 <motion.div
-                  className="absolute bottom-4 right-4 w-2 h-2 rounded-full"
-                  style={{ backgroundColor: PRIDE_COLORS.accent }}
-                  animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: idx * 0.3 }}
-                />
+                  className="absolute top-6 right-6 flex items-center gap-2 relative z-10"
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 2.5, repeat: Infinity }}
+                >
+                  <motion.div
+                    className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: LUXURY_COLORS.accent }}
+                    animate={{ scale: [1, 1.3, 1] }}
+                    transition={{ duration: 2.5, repeat: Infinity }}
+                  />
+                  <span
+                    className="text-xs font-semibold"
+                    style={{ color: LUXURY_COLORS.accent }}
+                  >
+                    Live
+                  </span>
+                </motion.div>
               </motion.div>
             );
           })}
@@ -481,36 +576,37 @@ function ManagerSection() {
 }
 
 // ============================================================================
-// SECTION 3: LEADS SECTION - Cascade Reveals with Spotlight Borders
+// SECTION 3: LEADS SECTION - Premium Bento Grid with Glassmorphism
 // ============================================================================
 function LeadsSection() {
   const features = [
     {
       title: 'Evaluate Anywhere',
-      description: 'Rate skills on your phone during shifts. No waiting for meetings.',
+      description: 'Rate skills on your phone during shifts. No waiting for meetings. Real-time feedback that drives growth.',
       icon: Phone,
-      large: true,
     },
     {
       title: 'See Real-Time Feedback',
-      description: 'New hire sees your feedback instantly.',
+      description: 'New hire sees your feedback instantly with detailed insights.',
       icon: ChatDots,
-      large: false,
     },
     {
       title: 'Track What Matters',
-      description: 'Technical, soft skills, leadership. All in one place.',
+      description: 'Technical, soft skills, leadership. All in one unified place.',
       icon: ChartBar,
-      large: false,
     },
   ];
 
   return (
-    <section className="py-24 md:py-40 bg-gradient-to-br from-emerald-50 to-transparent">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      className="py-32 md:py-40"
+      style={{ backgroundColor: LUXURY_COLORS.background }}
+    >
+      <div className="max-w-7xl mx-auto px-[10vw]">
+        {/* Premium Section Headline */}
         <motion.h2
-          className="text-4xl md:text-6xl font-bold tracking-tight mb-20"
-          style={{ color: PRIDE_COLORS.text }}
+          className="text-[clamp(36px,6vw,48px)] font-bold tracking-tight leading-[1.2] mb-24"
+          style={{ color: LUXURY_COLORS.text }}
           variants={itemVariants}
           initial="hidden"
           whileInView="visible"
@@ -519,126 +615,142 @@ function LeadsSection() {
           Feedback That Sticks. Progress You Can See.
         </motion.h2>
 
-        {/* Asymmetric Grid */}
+        {/* Premium Bento Grid Layout */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 auto-rows-[minmax(280px,auto)]"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
         >
-          {/* Large Feature Card */}
+          {/* Large Featured Card: md:col-span-2, md:row-span-2 */}
           <motion.div
-            className="md:col-span-2 p-12 md:p-14 rounded-3xl border bg-white relative overflow-hidden group"
-            style={{ borderColor: PRIDE_COLORS.border }}
+            className="md:col-span-2 md:row-span-2 p-14 rounded-3xl relative overflow-hidden group"
+            style={{
+              backgroundColor: LUXURY_COLORS.surface,
+              border: `1px solid ${LUXURY_COLORS.border}`,
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              boxShadow: `0 20px 60px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04)`,
+            }}
             custom={0}
             variants={cascadeVariants}
             whileHover={{
-              boxShadow: `0 30px 60px rgba(220, 38, 38, 0.15)`,
-              borderColor: PRIDE_COLORS.accent,
+              y: -8,
+              boxShadow: `0 40px 80px rgba(220,38,38,0.12), 0 8px 20px rgba(0,0,0,0.08)`,
             }}
           >
-            {/* Spotlight Border Animation */}
+            {/* Premium Gradient Overlay */}
             <motion.div
-              className="absolute inset-0 pointer-events-none"
-              initial={{ opacity: 0 }}
-              whileHover={{ opacity: 1 }}
-            >
-              <motion.div
-                className="absolute inset-0 rounded-3xl"
-                style={{
-                  background: `radial-gradient(circle 400px at var(--x) var(--y), ${PRIDE_COLORS.accent}20, transparent 80%)`,
-                  '--x': '50%',
-                  '--y': '50%',
-                } as any}
-                animate={{
-                  '--x': ['20%', '80%', '20%'],
-                  '--y': ['20%', '80%', '20%'],
-                }}
-                transition={{ duration: 4, repeat: Infinity }}
-              />
-            </motion.div>
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none"
+              style={{
+                background: `radial-gradient(circle at 50% 50%, ${LUXURY_COLORS.accent}08, transparent 70%)`,
+              }}
+              transition={{ duration: 0.5 }}
+            />
 
             <motion.div
-              className="relative z-10 flex items-start gap-8"
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 3, repeat: Infinity }}
+              className="relative z-10 flex flex-col justify-between h-full"
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 4, repeat: Infinity }}
             >
-              <div className="flex-shrink-0">
+              <div className="mb-8">
                 <motion.div
-                  className="w-20 h-20 rounded-2xl flex items-center justify-center"
-                  style={{ backgroundColor: `${PRIDE_COLORS.accent}15` }}
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8"
+                  style={{
+                    backgroundColor: `${LUXURY_COLORS.accent}12`,
+                  }}
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ duration: 3, repeat: Infinity }}
                 >
-                  <Phone size={40} color={PRIDE_COLORS.accent} weight="bold" />
+                  <Phone size={40} color={LUXURY_COLORS.accent} weight="bold" />
                 </motion.div>
-              </div>
-              <div className="flex-1">
-                <h3 className="text-3xl font-bold mb-4" style={{ color: PRIDE_COLORS.text }}>
+
+                <h3
+                  className="text-[clamp(24px,5vw,36px)] font-bold mb-6 leading-tight"
+                  style={{ color: LUXURY_COLORS.text }}
+                >
                   {features[0].title}
                 </h3>
-                <p className="text-lg" style={{ color: PRIDE_COLORS.muted }}>
+
+                <p
+                  className="text-lg leading-relaxed"
+                  style={{ color: LUXURY_COLORS.muted }}
+                >
                   {features[0].description}
                 </p>
               </div>
             </motion.div>
           </motion.div>
 
-          {/* Small Feature Cards - Staggered */}
-          <div className="flex flex-col gap-8">
-            {features.slice(1).map((feature, idx) => {
-              const IconComponent = feature.icon;
+          {/* Small Cards Grid: Right Column */}
+          {features.slice(1).map((feature, idx) => {
+            const IconComponent = feature.icon;
 
-              return (
+            return (
+              <motion.div
+                key={idx}
+                className="p-10 rounded-3xl relative overflow-hidden group"
+                style={{
+                  backgroundColor: LUXURY_COLORS.surface,
+                  border: `1px solid ${LUXURY_COLORS.border}`,
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  boxShadow: `0 20px 60px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04)`,
+                }}
+                custom={idx + 1}
+                variants={cascadeVariants}
+                whileHover={{
+                  y: -6,
+                  boxShadow: `0 30px 70px rgba(220,38,38,0.10), 0 6px 16px rgba(0,0,0,0.08)`,
+                }}
+              >
+                {/* Hover Gradient */}
                 <motion.div
-                  key={idx}
-                  className="p-10 rounded-2xl border bg-white relative overflow-hidden group"
-                  style={{ borderColor: PRIDE_COLORS.border }}
-                  custom={idx + 1}
-                  variants={cascadeVariants}
-                  whileHover={{
-                    boxShadow: `0 20px 40px rgba(220, 38, 38, 0.1)`,
-                    scale: 1.05,
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100"
+                  style={{
+                    background: `linear-gradient(135deg, ${LUXURY_COLORS.accent}06, transparent 70%)`,
                   }}
-                >
-                  {/* Gradient Background */}
-                  <motion.div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100"
-                    style={{
-                      background: `linear-gradient(135deg, ${PRIDE_COLORS.accent}05, transparent)`,
-                    }}
-                    transition={{ duration: 0.3 }}
-                  />
+                  transition={{ duration: 0.4 }}
+                />
 
+                <motion.div
+                  className="relative z-10 flex flex-col"
+                  animate={{ y: [0, -3, 0] }}
+                  transition={{ duration: 3.5, repeat: Infinity, delay: idx * 0.15 }}
+                >
                   <motion.div
-                    className="relative z-10 flex items-start gap-4"
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{ duration: 2.5, repeat: Infinity, delay: idx * 0.2 }}
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center mb-6"
+                    style={{
+                      backgroundColor: `${LUXURY_COLORS.accent}12`,
+                    }}
+                    animate={{ rotate: [0, 6, -6, 0] }}
+                    transition={{ duration: 4, repeat: Infinity }}
                   >
-                    <div className="flex-shrink-0">
-                      <motion.div
-                        className="w-14 h-14 rounded-xl flex items-center justify-center"
-                        style={{ backgroundColor: `${PRIDE_COLORS.accent}15` }}
-                        animate={{ rotate: [0, 8, -8, 0] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                      >
-                        <IconComponent size={28} color={PRIDE_COLORS.accent} weight="bold" />
-                      </motion.div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold mb-2 text-lg" style={{ color: PRIDE_COLORS.text }}>
-                        {feature.title}
-                      </h3>
-                      <p className="text-sm" style={{ color: PRIDE_COLORS.muted }}>
-                        {feature.description}
-                      </p>
-                    </div>
+                    <IconComponent
+                      size={28}
+                      color={LUXURY_COLORS.accent}
+                      weight="bold"
+                    />
                   </motion.div>
+
+                  <h3
+                    className="font-bold mb-3 text-lg"
+                    style={{ color: LUXURY_COLORS.text }}
+                  >
+                    {feature.title}
+                  </h3>
+
+                  <p
+                    className="text-sm leading-relaxed"
+                    style={{ color: LUXURY_COLORS.muted }}
+                  >
+                    {feature.description}
+                  </p>
                 </motion.div>
-              );
-            })}
-          </div>
+              </motion.div>
+            );
+          })}
         </motion.div>
       </div>
     </section>
@@ -646,26 +758,29 @@ function LeadsSection() {
 }
 
 // ============================================================================
-// SECTION 4: NEW HIRES - Sequential Milestone Animations with Icons
+// SECTION 4: MILESTONES - Premium Timeline with Gradient Cards
 // ============================================================================
 function NewHiresSection() {
   const milestones = [
-    { phase: 'Days 1-30', title: 'Foundation', color: PRIDE_COLORS.accent, icon: Flag },
+    { phase: 'Days 1-30', title: 'Foundation', icon: Flag },
     {
       phase: 'Days 31-60',
       title: 'Development',
-      color: PRIDE_COLORS.secondary,
       icon: Target,
     },
-    { phase: 'Days 61-90', title: 'Mastery', color: PRIDE_COLORS.accent, icon: Crown },
+    { phase: 'Days 61-90', title: 'Mastery', icon: Crown },
   ];
 
   return (
-    <section className="py-24 md:py-40 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      className="py-32 md:py-40"
+      style={{ backgroundColor: LUXURY_COLORS.background }}
+    >
+      <div className="max-w-7xl mx-auto px-[10vw]">
+        {/* Premium Section Headline */}
         <motion.h2
-          className="text-4xl md:text-6xl font-bold tracking-tight mb-20"
-          style={{ color: PRIDE_COLORS.text }}
+          className="text-[clamp(36px,6vw,48px)] font-bold tracking-tight leading-[1.2] mb-24"
+          style={{ color: LUXURY_COLORS.text }}
           variants={itemVariants}
           initial="hidden"
           whileInView="visible"
@@ -674,6 +789,7 @@ function NewHiresSection() {
           See Your Progress. Celebrate Your Growth.
         </motion.h2>
 
+        {/* Premium 3-Column Timeline Grid */}
         <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-10"
           variants={containerVariants}
@@ -687,97 +803,91 @@ function NewHiresSection() {
             return (
               <motion.div
                 key={idx}
-                className="relative p-12 rounded-3xl border text-center overflow-hidden group"
+                className="relative p-12 rounded-3xl text-center overflow-hidden group"
                 style={{
-                  borderColor: milestone.color,
-                  backgroundColor: `${milestone.color}08`,
+                  backgroundColor: LUXURY_COLORS.surface,
+                  border: `1px solid ${LUXURY_COLORS.border}`,
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  boxShadow: `0 20px 60px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04)`,
+                  background: `linear-gradient(135deg, ${LUXURY_COLORS.surface}, ${LUXURY_COLORS.accent}02)`,
                 }}
                 custom={idx}
                 variants={cascadeVariants}
                 whileHover={{
-                  scale: 1.08,
-                  borderColor: milestone.color,
-                  boxShadow: `0 20px 40px ${milestone.color}15`,
+                  y: -8,
+                  boxShadow: `0 40px 80px rgba(220,38,38,0.12), 0 8px 20px rgba(0,0,0,0.08)`,
                 }}
               >
-                {/* Animated Background Glow */}
+                {/* Premium Gradient Background */}
                 <motion.div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100"
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none rounded-3xl"
                   style={{
-                    background: `radial-gradient(circle at 50% 50%, ${milestone.color}15, transparent 70%)`,
+                    background: `linear-gradient(135deg, ${LUXURY_COLORS.accent}08, transparent 70%)`,
                   }}
-                  transition={{ duration: 0.4 }}
+                  transition={{ duration: 0.5 }}
                 />
 
-                {/* Icon Badge with Bounce */}
+                {/* Premium Icon Badge */}
                 <motion.div
-                  className="relative z-10 w-24 h-24 mx-auto rounded-full mb-8 flex items-center justify-center text-white font-bold text-4xl"
-                  style={{ backgroundColor: milestone.color }}
+                  className="relative z-10 w-20 h-20 mx-auto rounded-full mb-10 flex items-center justify-center text-white"
+                  style={{
+                    backgroundColor: LUXURY_COLORS.accent,
+                    boxShadow: `0 16px 40px ${LUXURY_COLORS.accent}30, 0 4px 12px ${LUXURY_COLORS.accent}20`,
+                  }}
                   animate={{
-                    y: [0, -16, 0],
-                    scale: [1, 1.1, 1],
+                    y: [0, -8, 0],
+                    scale: [1, 1.05, 1],
                   }}
                   transition={{
-                    duration: 2.5,
+                    duration: 3,
                     repeat: Infinity,
-                    delay: idx * 0.25,
+                    delay: idx * 0.2,
                     ease: 'easeInOut',
                   }}
                 >
-                  <IconComponent size={48} weight="bold" />
+                  <IconComponent size={40} weight="bold" />
                 </motion.div>
 
-                {/* Phase Label with Glow */}
+                {/* Premium Phase Label */}
                 <motion.div
-                  className="text-sm font-bold mb-3 relative z-10"
-                  style={{ color: milestone.color }}
-                  animate={{ opacity: [0.7, 1, 0.7] }}
-                  transition={{ duration: 3, repeat: Infinity }}
+                  className="text-xs font-bold uppercase tracking-widest mb-4 relative z-10"
+                  style={{ color: LUXURY_COLORS.accent }}
+                  animate={{ opacity: [0.8, 1, 0.8] }}
+                  transition={{ duration: 3.5, repeat: Infinity }}
                 >
                   {milestone.phase}
                 </motion.div>
 
-                {/* Title */}
+                {/* Premium Title */}
                 <motion.h3
-                  className="text-3xl font-bold relative z-10"
-                  style={{ color: PRIDE_COLORS.text }}
-                  animate={{ y: [0, -4, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: idx * 0.2 }}
+                  className="text-[clamp(24px,4vw,32px)] font-bold relative z-10 leading-tight"
+                  style={{ color: LUXURY_COLORS.text }}
+                  animate={{ y: [0, -3, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: idx * 0.15 }}
                 >
                   {milestone.title}
                 </motion.h3>
-
-                {/* Pulse Ring */}
-                <motion.div
-                  className="absolute inset-0 rounded-3xl"
-                  style={{
-                    border: `2px solid ${milestone.color}`,
-                    opacity: 0,
-                  }}
-                  animate={{ scale: [1, 1.1], opacity: [0.8, 0] }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    delay: idx * 0.3,
-                  }}
-                />
               </motion.div>
             );
           })}
         </motion.div>
 
-        {/* Progress Indicator */}
-        <motion.div className="mt-16 flex justify-center items-center gap-4">
+        {/* Premium Progress Indicator */}
+        <motion.div className="mt-20 flex justify-center items-center gap-4">
           {milestones.map((_, idx) => (
             <motion.div
               key={idx}
-              className="h-1 rounded-full"
-              style={{ backgroundColor: milestones[idx].color }}
+              className="rounded-full"
+              style={{
+                backgroundColor: LUXURY_COLORS.accent,
+                height: '4px',
+              }}
               animate={{
                 width: ['0.5rem', '2rem', '0.5rem'],
               }}
               transition={{
-                duration: 2,
+                duration: 2.5,
                 repeat: Infinity,
                 delay: idx * 0.3,
               }}
@@ -790,7 +900,7 @@ function NewHiresSection() {
 }
 
 // ============================================================================
-// SECTION 5: SOCIAL PROOF - Carousel with Smooth Transitions & Icons
+// SECTION 5: SOCIAL PROOF - Premium Testimonial Carousel
 // ============================================================================
 function SocialProofSection() {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -798,24 +908,24 @@ function SocialProofSection() {
 
   const testimonials = [
     {
-      quote: 'We went from spreadsheets to real-time insights. Game changer.',
+      quote: 'We transformed from spreadsheets to real-time insights. The impact on retention has been extraordinary.',
       author: 'Marcus Chen',
-      role: 'Manager, The Ritz-Carlton',
-      location: '4-diamond hotel',
+      role: 'Manager',
+      company: 'The Ritz-Carlton',
       rating: 5,
     },
     {
-      quote: 'Our team sees growth they can actually track. Retention improved dramatically.',
+      quote: 'Our team sees measurable growth they can actually track. Retention improved dramatically across all locations.',
       author: 'Sofia Rodriguez',
-      role: 'Regional Director, Marriott',
-      location: 'Multi-location chain',
+      role: 'Regional Director',
+      company: 'Marriott International',
       rating: 5,
     },
     {
-      quote: 'PRIDE made evaluating new hires 60% faster. Best platform we have.',
+      quote: 'PRIDE made evaluating new hires 60% faster. Best platform we have invested in.',
       author: 'James Mitchell',
-      role: 'Executive Chef, Peninsula',
-      location: 'Fine dining group',
+      role: 'Executive Chef',
+      company: 'The Peninsula',
       rating: 5,
     },
   ];
@@ -826,108 +936,132 @@ function SocialProofSection() {
 
     const interval = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
+    }, 6000);
 
     return () => clearInterval(interval);
   }, [autoPlay, testimonials.length]);
 
   return (
-    <section className="py-24 md:py-40 bg-gradient-to-br from-amber-50 to-transparent">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div className="text-center mb-20">
+    <section
+      className="py-32 md:py-40"
+      style={{ backgroundColor: LUXURY_COLORS.background }}
+    >
+      <div className="max-w-5xl mx-auto px-[10vw]">
+        {/* Premium Section Header */}
+        <motion.div className="text-center mb-24">
           <motion.h2
-            className="text-4xl md:text-6xl font-bold tracking-tight mb-6"
-            style={{ color: PRIDE_COLORS.text }}
+            className="text-[clamp(36px,6vw,48px)] font-bold tracking-tight leading-[1.2] mb-8"
+            style={{ color: LUXURY_COLORS.text }}
             variants={itemVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
           >
-            Trusted by Leading Hospitality Teams
+            Trusted by Premium Hospitality Brands
           </motion.h2>
 
           <motion.p
-            className="text-xl"
-            style={{ color: PRIDE_COLORS.muted }}
+            className="text-lg leading-relaxed max-w-2xl mx-auto"
+            style={{ color: LUXURY_COLORS.muted }}
             variants={itemVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
           >
-            Join 50+ restaurants tracking 2,000+ new hires
+            Join 50+ premium hotels and restaurants tracking 2,000+ new hires with measurable results
           </motion.p>
         </motion.div>
 
-        {/* Carousel */}
+        {/* Premium Testimonial Carousel */}
         <motion.div
-          className="relative max-w-3xl mx-auto"
+          className="relative"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
           onMouseEnter={() => setAutoPlay(false)}
           onMouseLeave={() => setAutoPlay(true)}
         >
-          {/* Testimonial Card */}
+          {/* Premium Testimonial Card */}
           <motion.div
             key={activeSlide}
-            className="p-12 md:p-16 rounded-3xl border bg-white text-center relative overflow-hidden"
-            style={{ borderColor: PRIDE_COLORS.border }}
-            initial={{ opacity: 0, y: 30 }}
+            className="p-16 rounded-3xl text-center relative overflow-hidden"
+            style={{
+              backgroundColor: LUXURY_COLORS.surface,
+              border: `1px solid ${LUXURY_COLORS.border}`,
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              boxShadow: `0 20px 60px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04)`,
+            }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ type: 'spring', stiffness: 60, damping: 30 }}
           >
-            {/* Animated Background */}
+            {/* Premium Background Gradient */}
             <motion.div
-              className="absolute inset-0 opacity-5"
+              className="absolute inset-0 opacity-50"
               style={{
-                background: `radial-gradient(circle at 50% 50%, ${PRIDE_COLORS.accent}, transparent)`,
+                background: `radial-gradient(circle at 50% 50%, ${LUXURY_COLORS.accent}04, transparent 70%)`,
               }}
               animate={{
-                scale: [1, 1.05, 1],
+                scale: [1, 1.02, 1],
               }}
-              transition={{ duration: 3, repeat: Infinity }}
+              transition={{ duration: 4, repeat: Infinity }}
             />
 
-            {/* Star Rating */}
+            {/* Premium Star Rating */}
             <motion.div
-              className="flex justify-center gap-2 mb-8 relative z-10"
+              className="flex justify-center gap-2 mb-10 relative z-10"
               animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
+              transition={{ duration: 3, repeat: Infinity }}
             >
               {Array.from({ length: testimonials[activeSlide].rating }).map((_, idx) => (
-                <Star key={idx} size={24} color={PRIDE_COLORS.secondary} weight="fill" />
+                <Star
+                  key={idx}
+                  size={24}
+                  color={LUXURY_COLORS.gold}
+                  weight="fill"
+                />
               ))}
             </motion.div>
 
-            {/* Quote */}
-            <motion.p
-              className="text-2xl md:text-3xl font-medium mb-10 relative z-10 leading-relaxed"
-              style={{ color: PRIDE_COLORS.text }}
+            {/* Premium Quote */}
+            <motion.div
+              className="mb-12 relative z-10"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              "{testimonials[activeSlide].quote}"
-            </motion.p>
+              <p
+                className="text-[clamp(20px,4vw,32px)] font-medium leading-[1.5]"
+                style={{ color: LUXURY_COLORS.text }}
+              >
+                "{testimonials[activeSlide].quote}"
+              </p>
+            </motion.div>
 
-            {/* Author Info */}
-            <motion.div className="relative z-10" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-              <div className="font-bold text-lg" style={{ color: PRIDE_COLORS.accent }}>
+            {/* Premium Author Info */}
+            <motion.div
+              className="relative z-10"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <div className="font-bold text-lg" style={{ color: LUXURY_COLORS.text }}>
                 {testimonials[activeSlide].author}
               </div>
-              <div className="text-sm mt-2" style={{ color: PRIDE_COLORS.muted }}>
-                {testimonials[activeSlide].role}
-              </div>
-              <div className="text-sm" style={{ color: PRIDE_COLORS.muted }}>
-                {testimonials[activeSlide].location}
+              <div className="text-sm mt-2" style={{ color: LUXURY_COLORS.muted }}>
+                {testimonials[activeSlide].role} at{' '}
+                <span style={{ color: LUXURY_COLORS.accent, fontWeight: 600 }}>
+                  {testimonials[activeSlide].company}
+                </span>
               </div>
             </motion.div>
           </motion.div>
 
-          {/* Carousel Controls */}
+          {/* Premium Carousel Controls */}
           <motion.div
-            className="flex justify-center gap-3 mt-12"
+            className="flex justify-center gap-4 mt-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -935,40 +1069,42 @@ function SocialProofSection() {
             {testimonials.map((_, idx) => (
               <motion.button
                 key={idx}
-                className="relative h-3 rounded-full transition-all overflow-hidden"
+                className="rounded-full transition-all"
                 style={{
                   width: idx === activeSlide ? '2rem' : '0.75rem',
-                  backgroundColor: idx === activeSlide ? PRIDE_COLORS.accent : PRIDE_COLORS.border,
+                  height: '0.75rem',
+                  backgroundColor:
+                    idx === activeSlide ? LUXURY_COLORS.accent : LUXURY_COLORS.border,
                 }}
                 onClick={() => {
                   setActiveSlide(idx);
                   setAutoPlay(false);
                 }}
-                whileHover={{ scale: 1.2 }}
+                whileHover={{ scale: 1.15 }}
                 whileTap={{ scale: 0.95 }}
               >
                 {idx === activeSlide && (
                   <motion.div
-                    className="absolute inset-0"
-                    style={{ backgroundColor: PRIDE_COLORS.secondary }}
+                    className="absolute inset-0 rounded-full"
+                    style={{ backgroundColor: LUXURY_COLORS.gold }}
                     animate={{ x: ['100%', '-100%'] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
+                    transition={{ duration: 1.2, repeat: Infinity }}
                   />
                 )}
               </motion.button>
             ))}
           </motion.div>
 
-          {/* Progress Indicator */}
+          {/* Premium Progress Indicator */}
           <motion.div
-            className="absolute -bottom-8 left-0 right-0 h-1 rounded-full"
-            style={{ backgroundColor: PRIDE_COLORS.border }}
+            className="mt-10 h-1 rounded-full"
+            style={{ backgroundColor: LUXURY_COLORS.border }}
           >
             <motion.div
               className="h-full rounded-full"
-              style={{ backgroundColor: PRIDE_COLORS.accent }}
+              style={{ backgroundColor: LUXURY_COLORS.accent }}
               animate={{ width: `${((activeSlide + 1) / testimonials.length) * 100}%` }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.6 }}
             />
           </motion.div>
         </motion.div>
@@ -978,79 +1114,72 @@ function SocialProofSection() {
 }
 
 // ============================================================================
-// SECTION 6: CTA FOOTER - Gradient Animations & Text Reveals
+// SECTION 6: CTA FOOTER - Premium Centered Layout with Trust Badges
 // ============================================================================
 function CTAFooterSection() {
   return (
-    <section className="relative py-28 md:py-40 overflow-hidden">
-      {/* Animated Gradient Background */}
+    <section className="relative py-32 md:py-40 overflow-hidden">
+      {/* Premium Gradient Background */}
       <motion.div
         className="absolute inset-0"
         style={{
-          background: `linear-gradient(135deg, #1a472a 0%, #2a5a3a 50%, #1a472a 100%)`,
+          background: `linear-gradient(135deg, ${LUXURY_COLORS.text}95 0%, ${LUXURY_COLORS.secondary}90 50%, ${LUXURY_COLORS.text}95 100%)`,
         }}
-        animate={{
-          backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
       />
 
-      {/* Animated Accent Blobs */}
+      {/* Subtle Animated Blobs */}
       <motion.div
-        className="absolute top-10 right-10 w-80 h-80 rounded-full opacity-20 blur-3xl"
-        style={{ background: PRIDE_COLORS.accent }}
+        className="absolute top-10 right-10 w-96 h-96 rounded-full opacity-8 blur-3xl"
+        style={{ background: LUXURY_COLORS.gold }}
         animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.15, 0.25, 0.15],
+          scale: [1, 1.15, 1],
+          opacity: [0.05, 0.12, 0.05],
         }}
         transition={{ duration: 8, repeat: Infinity }}
       />
 
       <motion.div
-        className="absolute bottom-0 left-10 w-96 h-96 rounded-full opacity-15 blur-3xl"
-        style={{ background: PRIDE_COLORS.secondary }}
+        className="absolute bottom-0 left-10 w-96 h-96 rounded-full opacity-5 blur-3xl"
+        style={{ background: LUXURY_COLORS.accent }}
         animate={{
-          scale: [1.2, 1, 1.2],
-          opacity: [0.1, 0.2, 0.1],
+          scale: [1.1, 1, 1.1],
+          opacity: [0.03, 0.08, 0.03],
         }}
         transition={{ duration: 10, repeat: Infinity, delay: 1 }}
       />
 
-      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Main Heading with Staggered Letters */}
+      <div className="relative max-w-4xl mx-auto px-[10vw] text-center">
+        {/* Premium Main Heading */}
         <motion.h2
-          className="text-5xl md:text-7xl font-bold tracking-tight mb-10 text-white"
+          className="text-[clamp(40px,8vw,72px)] font-bold tracking-tight leading-[1.15] mb-12 text-white"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {['Transform', 'Your', 'Onboarding', 'in', '90', 'Days'].map((word, idx) => (
-            <motion.span
-              key={idx}
-              variants={itemVariants}
-              className="inline-block mr-4"
-            >
-              {word}
-            </motion.span>
+          {['Ready to Transform', 'Your Onboarding?'].map((text, idx) => (
+            <motion.div key={idx} variants={itemVariants} className="inline-block mr-2">
+              {text}
+            </motion.div>
           ))}
         </motion.h2>
 
-        {/* Subheading with Fade In */}
+        {/* Premium Subheading */}
         <motion.p
-          className="text-xl md:text-2xl mb-16 text-emerald-50 max-w-3xl mx-auto leading-relaxed"
+          className="text-lg md:text-xl mb-16 leading-relaxed max-w-2xl mx-auto"
+          style={{ color: 'rgba(255,255,255,0.9)' }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.5, duration: 0.8 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
         >
-          <span style={{ color: PRIDE_COLORS.secondary }}>No credit card required.</span> Free trial
-          includes 5 team members. Start seeing results today.
+          No credit card required. Start your free trial today with 5 team members
+          and see measurable results in your first week.
         </motion.p>
 
-        {/* CTA Buttons with Advanced Animations */}
+        {/* Premium CTA Buttons */}
         <motion.div
-          className="flex flex-col sm:flex-row justify-center gap-8"
+          className="flex flex-col sm:flex-row justify-center gap-6 mb-20"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -1058,89 +1187,113 @@ function CTAFooterSection() {
         >
           {/* Primary Button */}
           <motion.button
-            className="px-12 py-5 rounded-full font-bold text-lg bg-white text-center relative overflow-hidden group flex items-center justify-center gap-3"
-            style={{ color: PRIDE_COLORS.accent }}
+            className="px-12 py-5 rounded-full font-bold text-lg text-center relative overflow-hidden group flex items-center justify-center gap-2"
+            style={{
+              backgroundColor: LUXURY_COLORS.accent,
+              color: 'white',
+              boxShadow: `0 20px 60px ${LUXURY_COLORS.accent}40, 0 4px 12px ${LUXURY_COLORS.accent}25`,
+            }}
             variants={itemVariants}
-            whileHover={{ scale: 1.08, y: -4 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{
+              scale: 1.02,
+              y: -2,
+              boxShadow: `0 30px 70px ${LUXURY_COLORS.accent}50, 0 6px 16px ${LUXURY_COLORS.accent}35`,
+            }}
+            whileTap={{ scale: 0.98 }}
           >
             {/* Shimmer Effect */}
             <motion.div
-              className="absolute inset-0 opacity-0 group-hover:opacity-30"
+              className="absolute inset-0 opacity-0 group-hover:opacity-20"
               style={{
-                background: `linear-gradient(90deg, transparent, ${PRIDE_COLORS.secondary}, transparent)`,
+                background: `linear-gradient(90deg, transparent, white, transparent)`,
               }}
               animate={{ x: ['-100%', '100%'] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
+              transition={{ duration: 1.2, repeat: Infinity }}
             />
 
             <span className="relative flex items-center gap-2">
               Start Free Trial
               <motion.span
-                animate={{ x: [0, 4, 0] }}
+                animate={{ x: [0, 3, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               >
-                <ArrowRight size={24} weight="bold" />
+                <ArrowRight size={22} weight="bold" />
               </motion.span>
             </span>
           </motion.button>
 
           {/* Secondary Button */}
           <motion.button
-            className="px-12 py-5 rounded-full font-bold text-lg border-2 border-white text-white transition-all group relative overflow-hidden"
-            style={{}}
+            className="px-12 py-5 rounded-full font-bold text-lg relative overflow-hidden group transition-all"
+            style={{
+              color: 'white',
+              borderWidth: '1px',
+              borderColor: 'rgba(255,255,255,0.3)',
+              backgroundColor: 'transparent',
+            }}
             variants={itemVariants}
             whileHover={{
-              scale: 1.08,
-              y: -4,
-              backgroundColor: 'rgba(255,255,255,0.15)',
-              borderColor: PRIDE_COLORS.secondary,
+              scale: 1.02,
+              y: -2,
+              backgroundColor: 'rgba(255,255,255,0.12)',
+              borderColor: 'rgba(255,255,255,0.6)',
             }}
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.98 }}
           >
             {/* Gradient Border Animation */}
             <motion.div
               className="absolute inset-0 rounded-full"
               style={{
-                background: `linear-gradient(90deg, ${PRIDE_COLORS.secondary}, ${PRIDE_COLORS.accent}, ${PRIDE_COLORS.secondary})`,
+                background: `linear-gradient(90deg, ${LUXURY_COLORS.gold}, ${LUXURY_COLORS.accent}, ${LUXURY_COLORS.gold})`,
                 backgroundSize: '200% 200%',
                 opacity: 0,
+                zIndex: 0,
               }}
               animate={{
                 backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-                opacity: [0, 0.3, 0],
+                opacity: [0, 0.2, 0],
               }}
               transition={{ duration: 3, repeat: Infinity }}
             />
 
-            <span className="relative">Request a Demo</span>
+            <span className="relative z-10">Request a Demo</span>
           </motion.button>
         </motion.div>
 
-        {/* Trust Badges with Icons */}
+        {/* Premium Trust Badges */}
         <motion.div
-          className="mt-16 flex flex-wrap justify-center gap-8 md:gap-12"
+          className="flex flex-wrap justify-center gap-8 md:gap-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 1, duration: 0.8 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
         >
           {[
-            { icon: CheckCircle, text: 'Free Setup' },
-            { icon: Star, text: '24/7 Support' },
-            { icon: Lightning, text: 'Instant Results' },
+            { icon: ShieldCheck, text: 'Enterprise-Grade Security' },
+            { icon: Trophy, text: 'Premium Support' },
+            { icon: Lightning, text: 'Instant Setup' },
           ].map((badge, idx) => {
             const IconComponent = badge.icon;
 
             return (
               <motion.div
                 key={idx}
-                className="flex items-center gap-3 text-white"
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 2, repeat: Infinity, delay: idx * 0.2 }}
+                className="flex items-center gap-3"
+                animate={{ y: [0, -4, 0] }}
+                transition={{ duration: 3, repeat: Infinity, delay: idx * 0.15 }}
               >
-                <IconComponent size={24} weight="bold" color={PRIDE_COLORS.secondary} />
-                <span className="font-semibold">{badge.text}</span>
+                <div
+                  className="flex-shrink-0"
+                  style={{ color: LUXURY_COLORS.gold }}
+                >
+                  <IconComponent size={22} weight="bold" />
+                </div>
+                <span
+                  className="font-semibold"
+                  style={{ color: 'rgba(255,255,255,0.9)' }}
+                >
+                  {badge.text}
+                </span>
               </motion.div>
             );
           })}
@@ -1151,11 +1304,14 @@ function CTAFooterSection() {
 }
 
 // ============================================================================
-// MAIN LANDING PAGE EXPORT
+// MAIN LANDING PAGE EXPORT - LUXURY DESIGN SYSTEM
 // ============================================================================
 export default function LandingPage() {
   return (
-    <main className="overflow-hidden bg-white">
+    <main
+      className="overflow-hidden"
+      style={{ backgroundColor: LUXURY_COLORS.background }}
+    >
       <HeroSection />
       <ManagerSection />
       <LeadsSection />

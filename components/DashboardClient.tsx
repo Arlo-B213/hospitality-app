@@ -19,6 +19,8 @@ import {
   pulseVariants,
   floatVariants,
   glowVariants,
+  buttonHoverVariants,
+  driftVariants,
 } from "@/lib/animations";
 
 const ICON_MAP: Record<string, React.ComponentType<any>> = {
@@ -61,41 +63,41 @@ export default function DashboardClient({
   }, []);
 
   return (
-    <div className="space-y-12 md:space-y-16">
-      {/* Header Section */}
+    <div className="space-y-16 md:space-y-24">
+      {/* Premium Header Section */}
       <motion.div
         initial="hidden"
         animate={isLoaded ? "show" : "hidden"}
         variants={slideTopVariants}
-        className="space-y-6"
+        className="space-y-8"
       >
-        <div className="space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+        <div className="space-y-6">
+          <h1 className="text-5xl md:text-6xl font-display text-neutral-900 dark:text-white tracking-tight leading-tight">
             A Complete Hospitality Leadership & Soft Skills Development System
           </h1>
-          <p className="text-lg text-neutral-400 max-w-4xl leading-relaxed">
+          <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 max-w-4xl leading-relaxed font-medium">
             Build the system once, make it repeatable, then trust your people
             to run it. Five pillars, four floor modules, one operating system
             for how leaders think under pressure.
           </p>
-          <div className="flex items-center gap-3 pt-4">
-            <span className="text-sm font-medium text-neutral-300">
+          <div className="flex items-center gap-4 pt-6">
+            <span className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide">
               {user.outlet.name}
             </span>
-            <span className="h-1.5 w-1.5 rounded-full bg-red-600"></span>
-            <span className="text-sm text-neutral-400">
+            <span className="h-2 w-2 rounded-full bg-red-600 shadow-lg shadow-red-600/40"></span>
+            <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wide">
               {user.outlet.tier.replace("_", " ")}
             </span>
           </div>
         </div>
       </motion.div>
 
-      {/* Stats Grid - Staggered Cascade */}
+      {/* Premium Stats Grid - Luxury Depth */}
       <motion.div
         initial="hidden"
         animate={isLoaded ? "show" : "hidden"}
         variants={containerVariants}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
+        className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12"
       >
         <StatCard
           label="Team Members"
@@ -117,12 +119,12 @@ export default function DashboardClient({
         />
       </motion.div>
 
-      {/* Module Cards - Animated Grid with Hover Effects */}
+      {/* Premium Module Cards - Ultra-Generous Spacing */}
       <motion.div
         initial="hidden"
         animate={isLoaded ? "show" : "hidden"}
         variants={containerVariants}
-        className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8"
+        className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-14"
       >
         {modules.map((m, idx) => (
           <ModuleCard
@@ -154,36 +156,36 @@ function StatCard({
         whileHover="hover"
         initial="rest"
         variants={glowVariants}
-        className="group relative h-full overflow-hidden rounded-2xl border border-neutral-800 bg-gradient-to-br from-neutral-900 to-neutral-800 p-8 transition-all"
+        className="group relative h-full overflow-hidden rounded-luxury border border-micro backdrop-blur-lg bg-white/80 dark:bg-neutral-900/70 p-12 lg:p-14 transition-all shadow-premium hover:shadow-luxury"
       >
-        {/* Animated background gradient */}
-        <motion.div className="absolute inset-0 bg-gradient-to-br from-red-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        {/* Premium animated background gradient - subtle */}
+        <motion.div className="absolute inset-0 bg-gradient-to-br from-red-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         {/* Content */}
-        <div className="relative z-10 space-y-4">
+        <div className="relative z-10 space-y-6">
           <motion.div
             animate="animate"
-            variants={pulseVariants}
-            className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500/20 to-red-600/20 flex items-center justify-center"
+            variants={driftVariants}
+            className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500/15 to-red-600/10 border border-red-600/10 flex items-center justify-center"
           >
-            <Icon className="text-red-500" size={24} weight="duotone" />
+            <Icon className="text-red-600 dark:text-red-500" size={28} weight="light" />
           </motion.div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <motion.div
-              className="text-4xl md:text-5xl font-bold text-white"
-              initial={{ opacity: 0, scale: 0.8 }}
+              className="text-5xl md:text-6xl font-display text-neutral-900 dark:text-white"
+              initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 + index * 0.1, duration: 0.6 }}
+              transition={{ delay: 0.2 + index * 0.12, duration: 0.7, ease: [0.32, 0.72, 0.3, 1] }}
             >
               {value}
             </motion.div>
-            <p className="text-sm font-medium text-neutral-400">{label}</p>
+            <p className="text-sm font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">{label}</p>
           </div>
         </div>
 
-        {/* Bottom accent bar */}
-        <motion.div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-red-500 to-transparent" />
+        {/* Premium bottom accent - refined gradient bar */}
+        <motion.div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-red-500/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
       </motion.div>
     </motion.div>
   );
@@ -200,69 +202,70 @@ function ModuleCard({
 }) {
   return (
     <motion.div variants={cardVariants}>
-      <Link href={module.href}>
+      <Link href={module.href} className="block h-full">
         <motion.div
           whileHover="hover"
           initial="rest"
-          variants={glowVariants}
-          className="group relative overflow-hidden rounded-2xl border border-neutral-800 bg-gradient-to-br from-neutral-900 to-neutral-800 p-8 md:p-10 transition-all cursor-pointer h-full flex flex-col justify-between"
+          variants={buttonHoverVariants}
+          className="group relative overflow-hidden rounded-luxury border border-micro backdrop-blur-lg bg-white/75 dark:bg-neutral-900/60 p-10 lg:p-14 transition-all cursor-pointer h-full flex flex-col justify-between shadow-premium hover:shadow-luxury"
         >
-          {/* Animated background gradient */}
+          {/* Premium animated gradient background */}
           <motion.div
-            className={`absolute inset-0 bg-gradient-to-br ${module.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+            className={`absolute inset-0 bg-gradient-to-br ${module.color} opacity-0 group-hover:opacity-20 transition-opacity duration-500`}
           />
 
-          {/* Icon with float animation */}
+          {/* Icon with refined float animation */}
           <motion.div
             animate="animate"
             variants={floatVariants}
-            className="relative z-10 mb-6"
+            className="relative z-10 mb-8"
           >
             <div
-              className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${module.color} border border-neutral-700 flex items-center justify-center group-hover:border-neutral-600 transition-colors`}
+              className={`w-18 h-18 rounded-3xl bg-gradient-to-br ${module.color} border border-white/20 dark:border-neutral-700/50 flex items-center justify-center group-hover:border-white/40 dark:group-hover:border-neutral-600 transition-all duration-500`}
             >
-              <Icon className="text-white" size={32} weight="duotone" />
+              <Icon className="text-white dark:text-white" size={36} weight="light" />
             </div>
           </motion.div>
 
-          {/* Content */}
-          <div className="relative z-10 space-y-4 flex-1">
-            <div className="space-y-2">
-              <h2 className="text-xl md:text-2xl font-bold text-white group-hover:text-white transition-colors">
+          {/* Premium Content */}
+          <div className="relative z-10 space-y-6 flex-1">
+            <div className="space-y-4">
+              <h2 className="text-2xl lg:text-3xl font-display text-neutral-900 dark:text-white group-hover:text-neutral-900 dark:group-hover:text-white transition-colors">
                 {module.title}
               </h2>
-              <p className="text-sm md:text-base text-neutral-300 leading-relaxed group-hover:text-neutral-200 transition-colors">
+              <p className="text-base lg:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed group-hover:text-neutral-700 dark:group-hover:text-neutral-200 transition-colors font-medium">
                 {module.desc}
               </p>
             </div>
           </div>
 
-          {/* CTA Arrow - appears on hover */}
+          {/* Premium CTA - refined arrow appears on hover */}
           <motion.div
-            initial={{ opacity: 0, x: -10 }}
+            initial={{ opacity: 0, x: -8 }}
             whileHover={{ opacity: 1, x: 0 }}
-            className="relative z-10 mt-8 flex items-center gap-2 text-red-500 font-medium text-sm"
+            transition={{ duration: 0.4 }}
+            className="relative z-10 mt-10 flex items-center gap-3 text-red-600 dark:text-red-500 font-semibold text-sm uppercase tracking-wide"
           >
             <span>Open Module</span>
             <motion.svg
-              className="w-4 h-4"
+              className="w-5 h-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              animate={{ x: [0, 4, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
+              animate={{ x: [0, 6, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
+                strokeWidth={2.5}
                 d="M9 5l7 7-7 7"
               />
             </motion.svg>
           </motion.div>
 
-          {/* Bottom accent bar */}
-          <motion.div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-red-500 to-transparent" />
+          {/* Premium bottom accent - refined gradient bar */}
+          <motion.div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-red-600 via-red-500/40 to-transparent opacity-40 group-hover:opacity-100 transition-opacity duration-500" />
         </motion.div>
       </Link>
     </motion.div>

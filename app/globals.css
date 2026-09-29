@@ -1,8 +1,24 @@
 @import "tailwindcss";
 
+/* Luxury Design System - Premium Typography & Colors */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f0f0f;
+
+  /* Premium Colors */
+  --color-red-primary: #dc2626;
+  --color-charcoal: #0f0f0f;
+  --color-platinum: #f8f8f8;
+  --color-silver: #d4d4d4;
+  --color-navy: #1e293b;
+
+  /* Premium Shadows - Layered */
+  --shadow-luxury: 0 20px 50px rgba(0, 0, 0, 0.1);
+  --shadow-premium: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  /* Premium Easing */
+  --ease-premium: cubic-bezier(0.32, 0.72, 0.3, 1);
 }
 
 @theme inline {
@@ -15,57 +31,184 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #f5f5f5;
   }
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
-/* Generous spacing utilities with clamp */
+/* Premium Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+/* Ultra-generous luxury spacing utilities */
 @layer utilities {
+  /* Premium spacing - clamp for responsive luxury */
   .p-clamp {
-    @apply p-8 sm:p-12 lg:p-16;
+    @apply p-8 sm:p-14 lg:p-16;
   }
 
   .px-clamp {
-    @apply px-6 sm:px-10 lg:px-16;
+    @apply px-6 sm:px-12 lg:p-20;
   }
 
   .py-clamp {
-    @apply py-8 sm:py-12 lg:py-16;
+    @apply py-8 sm:py-14 lg:py-20;
   }
 
   .gap-clamp {
-    @apply gap-8 sm:gap-10 lg:gap-12;
+    @apply gap-8 sm:gap-10 lg:gap-14;
   }
 
   .mb-clamp {
-    @apply mb-8 sm:mb-12 lg:mb-16;
+    @apply mb-8 sm:mb-12 lg:mb-20;
   }
 
   .mt-clamp {
-    @apply mt-8 sm:mt-12 lg:mt-16;
+    @apply mt-8 sm:mt-12 lg:mt-20;
   }
 
   .space-y-clamp > * + * {
-    @apply my-8 sm:my-10 lg:my-12;
+    @apply my-8 sm:my-12 lg:my-16;
   }
 
-  /* Smooth transitions */
+  /* Generous section gaps */
+  .section-gap {
+    @apply space-y-12 sm:space-y-16 lg:space-y-24;
+  }
+
+  /* Premium border radius */
+  .rounded-luxury {
+    @apply rounded-3xl;
+  }
+
+  .rounded-premium {
+    @apply rounded-2xl;
+  }
+
+  /* Premium Shadows - 3-layer depth */
+  .shadow-luxury {
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.04),
+      0 10px 24px rgba(0, 0, 0, 0.06),
+      0 20px 50px rgba(0, 0, 0, 0.1);
+  }
+
+  .shadow-premium {
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.03),
+      0 8px 16px rgba(0, 0, 0, 0.05),
+      0 12px 32px rgba(0, 0, 0, 0.08);
+  }
+
+  .shadow-subtle {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Glassmorphism - Premium blur & opacity */
+  .glass-luxury {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background-color: rgba(255, 255, 255, 0.96);
+  }
+
+  .glass-dark {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(15, 15, 15, 0.95);
+  }
+
+  /* Premium micro-borders */
+  .border-micro {
+    border-width: 1px;
+    border-color: rgba(212, 212, 212, 0.3);
+  }
+
+  .border-micro-dark {
+    border-width: 1px;
+    border-color: rgba(100, 100, 100, 0.2);
+  }
+
+  /* Premium transitions */
   .transition-smooth {
-    @apply transition-all duration-300 ease-in-out;
+    transition: all 0.5s var(--ease-premium);
   }
 
-  /* Glow effects */
+  .transition-premium {
+    transition: all 0.6s var(--ease-premium);
+  }
+
+  .transition-fast {
+    transition: all 0.3s var(--ease-premium);
+  }
+
+  /* Glow effects - Premium red */
   .glow-red {
-    @apply shadow-lg shadow-red-600/20;
+    box-shadow: 0 0 24px rgba(220, 38, 38, 0.15);
   }
 
   .glow-red-lg {
-    @apply shadow-2xl shadow-red-600/30;
+    box-shadow: 0 0 40px rgba(220, 38, 38, 0.25);
+  }
+
+  .glow-red-subtle {
+    box-shadow: 0 0 12px rgba(220, 38, 38, 0.08);
+  }
+
+  /* Premium text rendering */
+  .text-premium {
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .text-display {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  /* Elevated surfaces - Premium depth cards */
+  .surface-premium {
+    @apply bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800;
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.04),
+      0 4px 12px rgba(0, 0, 0, 0.06),
+      0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Gradient backgrounds - Premium directional */
+  .bg-gradient-luxury {
+    background: linear-gradient(135deg, #dc2626 0%, #0f0f0f 100%);
+  }
+
+  .bg-gradient-subtle {
+    background: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
+  }
+
+  /* Backdrop overlay - Premium semi-transparent */
+  .overlay-premium {
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+  }
+
+  /* Focus states - Premium */
+  .focus-premium {
+    @apply focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 dark:focus:ring-offset-neutral-900;
   }
 }

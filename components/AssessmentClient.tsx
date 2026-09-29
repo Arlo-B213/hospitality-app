@@ -45,21 +45,21 @@ export default function AssessmentClient({
   const activeName = outletUsers.find((u) => u.id === activeUserId)?.name;
 
   return (
-    <div className="space-y-12">
-      {/* Header */}
+    <div className="space-y-16 md:space-y-24">
+      {/* Premium Header */}
       <motion.div
         initial="hidden"
         animate={isLoaded ? "show" : "hidden"}
         variants={slideTopVariants}
-        className="space-y-4"
+        className="space-y-6"
       >
-        <div className="flex items-start gap-4">
-          <div className="p-3 rounded-xl bg-gradient-to-br from-red-500/20 to-red-600/20 border border-red-700/50">
-            <Target className="text-red-400" size={28} weight="duotone" />
+        <div className="flex items-start gap-6">
+          <div className="p-4 rounded-3xl bg-gradient-to-br from-red-500/20 to-red-600/10 border border-red-600/20 backdrop-blur-md">
+            <Target className="text-red-600 dark:text-red-500" size={32} weight="light" />
           </div>
           <div className="flex-1">
-            <h1 className="text-4xl font-bold">Skills Assessment</h1>
-            <p className="mt-2 text-neutral-400 max-w-3xl leading-relaxed">
+            <h1 className="text-5xl md:text-6xl font-display text-neutral-900 dark:text-white">Skills Assessment</h1>
+            <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-300 max-w-3xl leading-relaxed font-medium">
               Score behavior on the floor, not a number out of context. Self-score,
               then have the direct supervisor score independently — the gap is
               often the most useful coaching conversation in the program.
@@ -68,23 +68,23 @@ export default function AssessmentClient({
         </div>
       </motion.div>
 
-      {/* User Selector */}
+      {/* Premium User Selector */}
       {canViewOthers && (
         <motion.form
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           method="get"
           className="max-w-md"
         >
-          <label className="block space-y-3">
-            <span className="text-sm font-medium text-neutral-300">
+          <label className="block space-y-4">
+            <span className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide">
               Viewing Assessment For
             </span>
             <div className="relative">
               <select
                 name="userId"
                 defaultValue={activeUserId}
-                className="w-full appearance-none rounded-xl border border-neutral-700 bg-neutral-900/50 px-4 py-3 text-sm focus:border-red-500 focus:outline-none transition-colors backdrop-blur-sm"
+                className="w-full appearance-none rounded-2xl border border-micro backdrop-blur-lg bg-white/60 dark:bg-neutral-900/50 px-5 py-4 text-sm font-medium focus:border-red-600 focus:outline-none focus:ring-2 focus:ring-red-600/20 transition-all duration-300"
               >
                 {outletUsers.map((u) => (
                   <option key={u.id} value={u.id}>
@@ -93,8 +93,9 @@ export default function AssessmentClient({
                 ))}
               </select>
               <CaretDown
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-600 dark:text-neutral-400 pointer-events-none"
                 size={18}
+                weight="bold"
               />
             </div>
           </label>
@@ -102,7 +103,7 @@ export default function AssessmentClient({
             type="submit"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="mt-4 w-full px-4 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-medium transition-colors flex items-center justify-center gap-2"
+            className="mt-6 w-full px-6 py-4 rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold transition-all duration-300 shadow-premium hover:shadow-luxury flex items-center justify-center gap-3 uppercase tracking-wide text-sm"
           >
             <span>View Assessment</span>
             <ArrowRight size={18} weight="bold" />
@@ -110,13 +111,13 @@ export default function AssessmentClient({
         </motion.form>
       )}
 
-      {/* Assessment Form */}
+      {/* Premium Assessment Form */}
       <motion.form
         action={submitAction}
         initial="hidden"
         animate={isLoaded ? "show" : "hidden"}
         variants={containerVariants}
-        className="space-y-8 max-w-3xl"
+        className="space-y-10 max-w-4xl"
       >
         <input type="hidden" name="userId" value={activeUserId} />
         <input
@@ -125,22 +126,22 @@ export default function AssessmentClient({
           value={isSelf ? "SELF" : "SUPERVISOR"}
         />
 
-        {/* Scoring Context */}
+        {/* Premium Scoring Context */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl border border-neutral-700 bg-neutral-900/50 p-6 backdrop-blur-sm"
+          className="rounded-2xl border border-micro backdrop-blur-lg bg-gradient-to-r from-white/60 to-white/40 dark:from-neutral-900/50 dark:to-neutral-900/30 p-8 shadow-premium"
         >
-          <p className="text-sm text-neutral-400">
+          <p className="text-base font-medium text-neutral-700 dark:text-neutral-300">
             Scoring as{" "}
-            <span className="font-medium text-neutral-200">
+            <span className="font-bold text-neutral-900 dark:text-white bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent">
               {isSelf ? "Self-Assessment" : `Supervisor (${activeName})`}
             </span>
           </p>
         </motion.div>
 
-        {/* Pillar Fields */}
-        <div className="space-y-6">
+        {/* Premium Pillar Fields */}
+        <div className="space-y-8">
           {pillars.map((p, idx) => (
             <motion.div
               key={p.key}
@@ -182,42 +183,42 @@ export default function AssessmentClient({
           ))}
         </div>
 
-        {/* Submit Button */}
+        {/* Premium Submit Button */}
         <motion.button
           type="submit"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold transition-all flex items-center justify-center gap-2 text-lg"
+          className="w-full px-8 py-5 rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold transition-all duration-300 shadow-premium hover:shadow-luxury flex items-center justify-center gap-3 text-lg uppercase tracking-wide"
         >
           <span>Save Assessment Scores</span>
           <ArrowRight size={20} weight="bold" />
         </motion.button>
       </motion.form>
 
-      {/* Results Section */}
+      {/* Premium Results Section */}
       {ranked.length > 0 && (
         <motion.section
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="space-y-8"
+          transition={{ delay: 0.4, duration: 0.6 }}
+          className="space-y-10"
         >
-          <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold">Assessment Results</h2>
+          <div className="flex items-center gap-4">
+            <h2 className="text-4xl md:text-5xl font-display text-neutral-900 dark:text-white">Assessment Results</h2>
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
             >
-              <Star className="text-red-500" size={24} weight="duotone" />
+              <Star className="text-red-600 dark:text-red-500" size={28} weight="duotone" />
             </motion.div>
           </div>
 
-          {/* Skill Rankings */}
+          {/* Premium Skill Rankings */}
           <motion.div
             initial="hidden"
             animate="show"
             variants={containerVariants}
-            className="space-y-4"
+            className="space-y-6"
           >
             {ranked.map(([key, val], idx) => {
               const label = pillars.find((p) => p.key === key)?.label;
@@ -227,33 +228,33 @@ export default function AssessmentClient({
                 <motion.div
                   key={key}
                   variants={cardVariants}
-                  className="group rounded-xl border border-neutral-800 bg-neutral-900/50 p-6 hover:border-neutral-700 transition-colors backdrop-blur-sm"
+                  className="group rounded-2xl border border-micro backdrop-blur-lg bg-white/70 dark:bg-neutral-900/50 p-8 hover:border-micro dark:hover:border-micro-dark transition-all duration-500 shadow-premium hover:shadow-luxury"
                 >
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-neutral-300">
+                      <span className="text-base font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide">
                         {label}
                       </span>
-                      <span className="text-lg font-bold text-red-400">
-                        {val.toFixed(1)} / 4.0
+                      <span className="text-2xl font-display text-red-600 dark:text-red-500">
+                        {val.toFixed(1)} <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">/ 4.0</span>
                       </span>
                     </div>
 
-                    {/* Animated Progress Bar */}
+                    {/* Premium Animated Progress Bar */}
                     <motion.div
-                      className="w-full h-2 rounded-full bg-neutral-800 overflow-hidden"
+                      className="w-full h-3 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden shadow-subtle"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                     >
                       <motion.div
-                        className="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full"
+                        className="h-full bg-gradient-to-r from-red-600 via-red-500 to-red-600 rounded-full shadow-lg shadow-red-600/40"
                         initial={{ scaleX: 0 }}
                         animate={{ scaleX: 1 }}
                         transition={{
                           type: "spring",
-                          stiffness: 50,
-                          damping: 20,
-                          delay: idx * 0.1 + 0.2,
+                          stiffness: 40,
+                          damping: 25,
+                          delay: idx * 0.12 + 0.3,
                         }}
                         style={{ originX: 0 }}
                       />
@@ -264,46 +265,42 @@ export default function AssessmentClient({
             })}
           </motion.div>
 
-          {/* Archetype Card */}
+          {/* Premium Archetype Card - Luxury Highlight */}
           {archetype && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 }}
-              className="relative overflow-hidden rounded-2xl border border-red-700/50 bg-gradient-to-br from-red-950/40 to-red-900/20 p-8 backdrop-blur-sm"
+              initial={{ opacity: 0, scale: 0.96, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              className="relative overflow-hidden rounded-luxury border border-micro backdrop-blur-lg bg-gradient-to-br from-red-50/80 to-white/60 dark:from-red-950/30 dark:to-neutral-900/50 p-12 shadow-luxury hover:shadow-luxury"
             >
-              {/* Animated background */}
+              {/* Premium animated background glow */}
               <motion.div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                animate={{
-                  backgroundPosition: ["200% center", "-200% center"],
-                }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 bg-gradient-to-r from-red-600/0 via-red-600/5 to-red-600/0 opacity-0 hover:opacity-100 transition-opacity duration-500"
               />
 
-              <div className="relative z-10 space-y-4">
-                <div className="flex items-center gap-2">
+              <div className="relative z-10 space-y-6">
+                <div className="flex items-center gap-3">
                   <motion.div
                     animate="animate"
                     variants={pulseVariants}
                     className="flex-shrink-0"
                   >
                     <Star
-                      className="text-red-400"
-                      size={24}
-                      weight="duotone"
+                      className="text-red-600 dark:text-red-500"
+                      size={28}
+                      weight="light"
                     />
                   </motion.div>
-                  <span className="text-xs uppercase font-bold text-red-300">
+                  <span className="text-xs uppercase font-bold text-red-600 dark:text-red-500 tracking-widest">
                     Your Leadership Archetype
                   </span>
                 </div>
 
-                <div className="space-y-2">
-                  <h3 className="text-3xl font-bold text-white">
+                <div className="space-y-4">
+                  <h3 className="text-4xl md:text-5xl font-display text-neutral-900 dark:text-white leading-tight">
                     {archetype.name}
                   </h3>
-                  <p className="text-neutral-200 leading-relaxed text-lg">
+                  <p className="text-neutral-700 dark:text-neutral-200 leading-relaxed text-lg font-medium">
                     {archetype.desc}
                   </p>
                 </div>
@@ -313,14 +310,14 @@ export default function AssessmentClient({
         </motion.section>
       )}
 
-      {/* Empty State */}
+      {/* Premium Empty State */}
       {ranked.length === 0 && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="text-center py-12"
+          className="text-center py-16"
         >
-          <p className="text-neutral-500 text-lg">
+          <p className="text-neutral-600 dark:text-neutral-400 text-lg font-medium">
             No assessment scores yet for this person. Complete the form above to get started.
           </p>
         </motion.div>
