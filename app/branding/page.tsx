@@ -15,6 +15,7 @@ import {
   Moon,
   Sun,
   Info,
+  ArrowRight,
 } from "@phosphor-icons/react";
 
 interface BrandingConfig {
@@ -28,35 +29,44 @@ interface BrandingConfig {
   fontFamily: string;
 }
 
+// Premium animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.08,
       delayChildren: 0.2,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: "spring", stiffness: 100, damping: 12 },
+    transition: { type: "spring", stiffness: 80, damping: 25, duration: 0.5 },
+  },
+};
+
+const fadeInVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.5 },
   },
 };
 
 const pulseVariants = {
   pulse: {
     boxShadow: [
-      "0 0 0 0 rgba(220, 38, 38, 0.4)",
-      "0 0 0 8px rgba(220, 38, 38, 0.2)",
-      "0 0 0 16px rgba(220, 38, 38, 0)",
+      "0 0 0 0 rgba(220, 38, 38, 0.3)",
+      "0 0 0 12px rgba(220, 38, 38, 0.1)",
+      "0 0 0 24px rgba(220, 38, 38, 0)",
     ],
     transition: {
-      duration: 2,
+      duration: 5,
       repeat: Infinity,
     },
   },
@@ -69,8 +79,8 @@ const successVariants = {
     opacity: 1,
     transition: {
       type: "spring",
-      stiffness: 200,
-      damping: 15,
+      stiffness: 120,
+      damping: 20,
     },
   },
   exit: {
@@ -82,9 +92,9 @@ const successVariants = {
 const confettiVariants = {
   hidden: { y: 0, opacity: 1 },
   exit: {
-    y: -100,
+    y: -120,
     opacity: 0,
-    transition: { duration: 0.6 },
+    transition: { duration: 1.5 },
   },
 };
 
@@ -216,12 +226,12 @@ export default function BrandingPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-white">
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
         >
-          <Gear size={40} className="text-red-600" weight="light" />
+          <Gear size={48} className="text-red-600" weight="regular" />
         </motion.div>
       </div>
     );
@@ -229,27 +239,40 @@ export default function BrandingPage() {
 
   if (!isAdmin) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-red-400">Access Denied</p>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-white">
+        <p className="text-red-600 text-lg font-semibold">Access Denied</p>
       </div>
     );
   }
 
   return (
-    <motion.div
-      className="min-h-screen p-clamp"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {/* Header */}
-      <motion.div variants={itemVariants} className="mb-clamp">
-        <h1 className="text-5xl font-bold text-neutral-100 mb-4">
-          Brand Customization
-        </h1>
-        <p className="text-lg text-neutral-400">
-          Design your application's unique identity with custom colors, logos, and themes.
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      {/* Luxury Header */}
+      <motion.div
+        className="border-b border-gray-200 sticky top-0 z-40 backdrop-blur-sm bg-white/80"
+        variants={fadeInVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="max-w-7xl mx-auto px-8 py-6 sm:px-12 lg:px-16">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-800 text-gray-900 tracking-tight">
+                Brand Customization
+              </h1>
+              <p className="text-gray-600 mt-2 text-sm sm:text-base font-medium">
+                Define your luxury hospitality brand identity
+              </p>
+            </div>
+            <motion.div
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="hidden sm:flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-red-50 to-red-100"
+            >
+              <Palette size={28} className="text-red-600" weight="duotone" />
+            </motion.div>
+          </div>
+        </div>
       </motion.div>
 
       {/* Alert Message */}
@@ -259,177 +282,192 @@ export default function BrandingPage() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className={`mb-clamp p-6 rounded-xl border-l-4 backdrop-blur ${
-              message.type === "success"
-                ? "bg-emerald-900/30 border-emerald-600 text-emerald-200"
-                : "bg-red-900/30 border-red-600 text-red-200"
-            }`}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 max-w-md"
           >
-            <div className="flex items-center gap-3">
-              {message.type === "success" ? (
-                <Check weight="bold" size={24} />
-              ) : (
-                <Info weight="bold" size={24} />
-              )}
-              <span className="font-medium">{message.text}</span>
-            </div>
+            <motion.div
+              className={`px-6 py-4 rounded-2xl backdrop-blur-lg border ${
+                message.type === "success"
+                  ? "bg-emerald-50/90 border-emerald-200 text-emerald-900 shadow-lg shadow-emerald-500/10"
+                  : "bg-red-50/90 border-red-200 text-red-900 shadow-lg shadow-red-500/10"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                {message.type === "success" ? (
+                  <Check weight="bold" size={20} />
+                ) : (
+                  <Info weight="bold" size={20} />
+                )}
+                <span className="font-semibold text-sm">{message.text}</span>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-clamp">
-        {/* Form Section */}
-        <motion.div variants={itemVariants} className="space-y-clamp">
-          {/* App Name Section */}
-          <FormSection
-            icon={Gear}
-            title="General Settings"
-            description="Configure your application's basic branding"
-          >
-            <div className="space-y-6">
-              <FormInput
-                label="Application Name"
-                name="appName"
-                type="text"
-                value={formData.appName || ""}
-                onChange={handleInputChange}
-                placeholder="The Service Stack"
-                icon={TextT}
-              />
-            </div>
-          </FormSection>
+      {/* Main Content: Split-Screen Layout */}
+      <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 py-8 lg:py-12">
+        <motion.div
+          className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Form Section: 40% on desktop */}
+          <motion.div variants={itemVariants} className="lg:col-span-2 space-y-6">
+            {/* General Settings */}
+            <FormSection
+              icon={Gear}
+              title="General Settings"
+              description="Configure basic branding"
+            >
+              <div className="space-y-5">
+                <FormInput
+                  label="Application Name"
+                  name="appName"
+                  type="text"
+                  value={formData.appName || ""}
+                  onChange={handleInputChange}
+                  placeholder="Your Luxury Brand"
+                />
+              </div>
+            </FormSection>
 
-          {/* Color Section */}
-          <FormSection
-            icon={Palette}
-            title="Color Palette"
-            description="Choose colors that represent your brand"
-          >
-            <div className="space-y-6">
-              <ColorPicker
-                label="Primary Color"
-                name="primaryColor"
-                value={formData.primaryColor || "#3b82f6"}
-                onChange={handleInputChange}
-              />
-              <ColorPicker
-                label="Secondary Color"
-                name="secondaryColor"
-                value={formData.secondaryColor || "#1e293b"}
-                onChange={handleInputChange}
-              />
-              <ColorPicker
-                label="Accent Color"
-                name="accentColor"
-                value={formData.accentColor || "#dc2626"}
-                onChange={handleInputChange}
-              />
-            </div>
-          </FormSection>
+            {/* Color Palette */}
+            <FormSection
+              icon={Palette}
+              title="Color Palette"
+              description="Define your brand colors"
+            >
+              <div className="space-y-5">
+                <ColorPicker
+                  label="Primary Color"
+                  name="primaryColor"
+                  value={formData.primaryColor || "#3b82f6"}
+                  onChange={handleInputChange}
+                />
+                <ColorPicker
+                  label="Secondary Color"
+                  name="secondaryColor"
+                  value={formData.secondaryColor || "#1e293b"}
+                  onChange={handleInputChange}
+                />
+                <ColorPicker
+                  label="Accent Color"
+                  name="accentColor"
+                  value={formData.accentColor || "#dc2626"}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </FormSection>
 
-          {/* Logo Section */}
-          <FormSection
-            icon={Image}
-            title="Logo & Branding"
-            description="Upload your company logo"
-          >
-            <LogoUpload
-              value={formData.logoUrl}
-              onChange={(url) =>
-                setFormData((prev) => ({ ...prev, logoUrl: url }))
-              }
-              onDrag={handleDrag}
-              onDrop={handleDrop}
-              dragActive={dragActive}
-            />
-          </FormSection>
-
-          {/* Theme & Typography Section */}
-          <FormSection
-            icon={Monitor}
-            title="Theme & Typography"
-            description="Set default appearance preferences"
-          >
-            <div className="space-y-6">
-              <ThemeToggle
-                value={formData.theme || "dark"}
-                onChange={(theme) =>
-                  setFormData((prev) => ({ ...prev, theme }))
+            {/* Logo & Branding */}
+            <FormSection
+              icon={Image}
+              title="Logo & Branding"
+              description="Upload your company logo"
+            >
+              <LogoUpload
+                value={formData.logoUrl}
+                onChange={(url) =>
+                  setFormData((prev) => ({ ...prev, logoUrl: url }))
                 }
+                onDrag={handleDrag}
+                onDrop={handleDrop}
+                dragActive={dragActive}
               />
-              <FontSelector
-                value={formData.fontFamily || "geist-sans"}
-                onChange={(font) =>
-                  setFormData((prev) => ({ ...prev, fontFamily: font }))
-                }
-              />
-            </div>
-          </FormSection>
+            </FormSection>
 
-          {/* Action Buttons */}
+            {/* Theme & Typography */}
+            <FormSection
+              icon={Monitor}
+              title="Theme & Typography"
+              description="Set appearance preferences"
+            >
+              <div className="space-y-5">
+                <ThemeToggle
+                  value={formData.theme || "dark"}
+                  onChange={(theme) =>
+                    setFormData((prev) => ({ ...prev, theme }))
+                  }
+                />
+                <FontSelector
+                  value={formData.fontFamily || "geist-sans"}
+                  onChange={(font) =>
+                    setFormData((prev) => ({ ...prev, fontFamily: font }))
+                  }
+                />
+              </div>
+            </FormSection>
+
+            {/* Action Buttons */}
+            <motion.div
+              variants={itemVariants}
+              className="flex gap-3 pt-6 mt-8 border-t border-gray-200"
+            >
+              <motion.button
+                onClick={handleSave}
+                disabled={saving}
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex-1 relative px-8 py-3.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-2xl font-bold text-sm tracking-wide transition-all flex items-center justify-center gap-2 group overflow-hidden shadow-lg shadow-red-600/20 hover:shadow-red-600/40"
+              >
+                <motion.div
+                  className="absolute inset-0 bg-white/15"
+                  variants={pulseVariants}
+                  animate={!saving ? "pulse" : ""}
+                />
+                <motion.div
+                  animate={{ x: saving ? 8 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="relative flex items-center gap-2"
+                >
+                  {saving ? (
+                    <>
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                        className="inline-block"
+                      >
+                        <CloudArrowUp weight="bold" size={18} />
+                      </motion.div>
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Check weight="bold" size={18} />
+                      <span>Save Changes</span>
+                    </>
+                  )}
+                </motion.div>
+              </motion.button>
+
+              <motion.button
+                onClick={() => setFormData(config || {})}
+                disabled={saving}
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="px-6 py-3.5 bg-white hover:bg-gray-50 disabled:bg-gray-100 text-gray-700 border border-gray-200 hover:border-gray-300 rounded-2xl font-semibold text-sm tracking-wide transition-all shadow-sm hover:shadow-md"
+              >
+                Reset
+              </motion.button>
+            </motion.div>
+          </motion.div>
+
+          {/* Live Preview Section: 60% on desktop - Sticky */}
           <motion.div
             variants={itemVariants}
-            className="flex gap-4 pt-6 border-t border-neutral-700"
+            className="lg:col-span-3 lg:sticky lg:top-24"
           >
-            <motion.button
-              onClick={handleSave}
-              disabled={saving}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="flex-1 relative px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 disabled:from-neutral-600 disabled:to-neutral-700 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2 group overflow-hidden"
-            >
-              <motion.div
-                className="absolute inset-0 bg-white/20"
-                variants={pulseVariants}
-                animate={!saving ? "pulse" : ""}
-              />
-              <motion.div
-                animate={{ x: saving ? 10 : 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                {saving ? (
-                  <>
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity }}
-                      className="inline-block"
-                    >
-                      <CloudArrowUp weight="bold" size={20} />
-                    </motion.div>
-                  </>
-                ) : (
-                  <>
-                    <Check weight="bold" size={20} />
-                    <span>Save Changes</span>
-                  </>
-                )}
-              </motion.div>
-            </motion.button>
-
-            <motion.button
-              onClick={() => setFormData(config || {})}
-              disabled={saving}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-8 py-4 bg-neutral-800 hover:bg-neutral-700 disabled:bg-neutral-700 text-neutral-200 rounded-xl font-semibold transition-all"
-            >
-              Reset
-            </motion.button>
+            <LivePreview formData={formData} />
           </motion.div>
-        </motion.div>
-
-        {/* Live Preview Section */}
-        <motion.div variants={itemVariants} className="sticky top-8">
-          <LivePreview formData={formData} />
         </motion.div>
       </div>
 
-      {/* Success Celebration */}
+      {/* Success Celebration - Luxury Confetti */}
       <AnimatePresence>
         {showSuccess && (
           <>
-            {[...Array(8)].map((_, i) => (
+            {[...Array(12)].map((_, i) => (
               <motion.div
                 key={i}
                 variants={confettiVariants}
@@ -437,18 +475,22 @@ export default function BrandingPage() {
                 exit="exit"
                 className="fixed pointer-events-none"
                 style={{
-                  left: `${20 + i * 10}%`,
-                  top: "50%",
+                  left: `${15 + i * 7}%`,
+                  top: "40%",
                 }}
               >
                 <motion.div
-                  animate={{ rotate: 360, scale: [1, 0] }}
-                  transition={{ duration: 0.8 }}
+                  animate={{
+                    rotate: 360,
+                    scale: [1, 0],
+                    opacity: [1, 0],
+                  }}
+                  transition={{ duration: 1.5 }}
                 >
                   <Check
-                    size={32}
+                    size={28}
                     weight="bold"
-                    className="text-emerald-400"
+                    className="text-red-600 drop-shadow-lg"
                   />
                 </motion.div>
               </motion.div>
@@ -456,11 +498,11 @@ export default function BrandingPage() {
           </>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
 
-// Color Picker Component
+// Premium Color Picker Component
 function ColorPicker({
   label,
   name,
@@ -474,41 +516,67 @@ function ColorPicker({
 }) {
   return (
     <motion.div variants={itemVariants} className="space-y-3">
-      <label className="block text-sm font-semibold text-neutral-200">
+      <label className="block text-xs font-bold text-gray-900 uppercase tracking-widest">
         {label}
       </label>
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-6 items-start">
+        {/* Large Luxury Color Swatch */}
         <motion.div
           className="relative group"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover="hover"
+          initial="normal"
         >
+          {/* Animated Glow Background */}
           <motion.div
-            className="absolute inset-0 rounded-xl blur-lg opacity-0 group-hover:opacity-50 transition-opacity"
+            className="absolute -inset-3 rounded-3xl blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-300"
             style={{ backgroundColor: value }}
           />
+
+          {/* Color Input (hidden but functional) */}
           <input
             type="color"
             name={name}
             value={value}
             onChange={onChange}
-            className="relative w-20 h-20 rounded-xl cursor-pointer border-2 border-neutral-700 hover:border-neutral-600 transition-colors"
+            className="absolute w-full h-full opacity-0 cursor-pointer rounded-2xl"
           />
+
+          {/* Visual Swatch */}
+          <motion.div
+            className="relative w-32 h-32 rounded-2xl border-2 border-gray-200 cursor-pointer shadow-lg overflow-hidden"
+            style={{ backgroundColor: value }}
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            {/* Shine Effect on Hover */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100"
+              animate={{ x: ["-100%", "100%"] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          </motion.div>
         </motion.div>
-        <input
-          type="text"
-          name={name}
-          value={value}
-          onChange={onChange}
-          className="flex-1 px-4 py-3 bg-neutral-800 border border-neutral-700 hover:border-neutral-600 focus:border-red-600 rounded-lg text-neutral-100 font-mono text-sm transition-all focus:outline-none focus:ring-2 focus:ring-red-600/30"
-          placeholder="#000000"
-        />
+
+        {/* Input Field & Color Code */}
+        <div className="flex-1 space-y-2 pt-2">
+          <input
+            type="text"
+            name={name}
+            value={value}
+            onChange={onChange}
+            className="w-full px-4 py-3 bg-white border border-gray-200 hover:border-gray-300 focus:border-red-600 text-gray-900 font-mono text-sm rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-red-600/20 focus:ring-offset-2 shadow-sm"
+            placeholder="#000000"
+          />
+          <p className="text-xs text-gray-500 font-medium">
+            Hex Code
+          </p>
+        </div>
       </div>
     </motion.div>
   );
 }
 
-// Form Section Component
+// Premium Form Section Component
 function FormSection({
   icon: Icon,
   title,
@@ -523,25 +591,35 @@ function FormSection({
   return (
     <motion.div
       variants={itemVariants}
-      className="bg-neutral-900/50 border border-neutral-800 hover:border-neutral-700 rounded-xl p-6 lg:p-8 backdrop-blur transition-all group hover:shadow-lg hover:shadow-red-600/10"
+      className="relative bg-white/60 backdrop-blur-lg border border-gray-200 hover:border-gray-300 rounded-3xl p-8 transition-all group hover:shadow-xl hover:shadow-gray-400/10"
     >
-      <div className="flex items-start gap-4 mb-6">
+      {/* Premium Border Gradient on Hover */}
+      <motion.div
+        className="absolute inset-0 rounded-3xl bg-gradient-to-r from-red-600/0 via-red-600/0 to-red-600/0 opacity-0 group-hover:opacity-5 pointer-events-none"
+      />
+
+      <div className="relative z-10 flex items-start gap-4 mb-6">
         <motion.div
-          className="p-3 bg-red-600/10 rounded-lg group-hover:bg-red-600/20 transition-colors"
-          whileHover={{ rotate: 10 }}
+          className="p-3.5 bg-gradient-to-br from-red-100 to-red-50 rounded-xl group-hover:from-red-200 group-hover:to-red-100 transition-colors"
+          whileHover={{ rotate: 12, scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 200, damping: 12 }}
         >
-          <Icon size={24} weight="bold" className="text-red-600" />
+          <Icon size={24} weight="duotone" className="text-red-600" />
         </motion.div>
-        <div>
-          <h3 className="text-lg font-bold text-neutral-100">{title}</h3>
-          <p className="text-sm text-neutral-400 mt-1">{description}</p>
+        <div className="flex-1">
+          <h3 className="text-lg font-800 text-gray-900 tracking-tight">
+            {title}
+          </h3>
+          <p className="text-sm text-gray-600 mt-1 font-medium">
+            {description}
+          </p>
         </div>
       </div>
       <motion.div
-        className="space-y-4"
+        className="relative z-10 space-y-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.1 }}
       >
         {children}
       </motion.div>
@@ -549,7 +627,7 @@ function FormSection({
   );
 }
 
-// Form Input Component
+// Premium Form Input Component
 function FormInput({
   label,
   name,
@@ -569,7 +647,7 @@ function FormInput({
 }) {
   return (
     <motion.div variants={itemVariants} className="space-y-3">
-      <label className="block text-sm font-semibold text-neutral-200">
+      <label className="block text-xs font-bold text-gray-900 uppercase tracking-widest">
         {label}
       </label>
       <div className="relative group">
@@ -579,20 +657,22 @@ function FormInput({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          whileFocus={{ scale: 1.01 }}
-          className="w-full px-6 py-4 bg-neutral-800 border-2 border-neutral-700 hover:border-neutral-600 focus:border-red-600 rounded-lg text-neutral-100 focus:outline-none transition-all focus:ring-2 focus:ring-red-600/30"
+          whileFocus={{ scale: 1.01, y: -1 }}
+          className="w-full px-5 py-3.5 bg-white border-2 border-gray-200 hover:border-gray-300 focus:border-red-600 text-gray-900 placeholder-gray-400 rounded-xl focus:outline-none transition-all focus:ring-2 focus:ring-red-600/20 focus:ring-offset-2 shadow-sm font-medium"
         />
+        {/* Focus Line Animation */}
         <motion.div
-          className="absolute inset-0 rounded-lg bg-gradient-to-r from-red-600/0 via-red-600/10 to-red-600/0 opacity-0 group-hover:opacity-100 pointer-events-none"
-          animate={{ x: [-100, 100] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-red-600/0 via-red-600 to-red-600/0 pointer-events-none"
+          initial={{ width: "0%" }}
+          whileFocus={{ width: "100%" }}
+          transition={{ duration: 0.3 }}
         />
       </div>
     </motion.div>
   );
 }
 
-// Logo Upload Component
+// Premium Logo Upload Component
 function LogoUpload({
   value,
   onChange,
@@ -607,34 +687,43 @@ function LogoUpload({
   dragActive: boolean;
 }) {
   return (
-    <motion.div variants={itemVariants} className="space-y-4">
+    <motion.div variants={itemVariants} className="space-y-5">
       <motion.div
         onDragEnter={onDrag}
         onDragLeave={onDrag}
         onDragOver={onDrag}
         onDrop={onDrop}
         animate={{
-          backgroundColor: dragActive ? "rgba(220, 38, 38, 0.1)" : "transparent",
-          borderColor: dragActive ? "rgb(220, 38, 38)" : "rgb(31, 41, 55)",
+          backgroundColor: dragActive ? "rgba(220, 38, 38, 0.08)" : "transparent",
+          borderColor: dragActive ? "rgb(220, 38, 38)" : "rgb(229, 231, 235)",
         }}
-        className="relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all group hover:border-red-600/50 hover:bg-red-600/5"
+        className="relative border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all group hover:border-red-500/60 hover:bg-red-50/30"
       >
+        {/* Animated Icon */}
         <motion.div
           animate={{
-            y: [0, -8, 0],
+            y: [0, -10, 0],
           }}
           transition={{
-            duration: 2,
+            duration: 2.5,
             repeat: Infinity,
+            ease: "easeInOut",
           }}
-          className="mb-4"
+          className="mb-6"
         >
-          <CloudArrowUp size={40} weight="bold" className="text-red-600 mx-auto" />
+          <CloudArrowUp
+            size={48}
+            weight="duotone"
+            className="text-red-600 mx-auto"
+          />
         </motion.div>
-        <p className="text-neutral-200 font-semibold mb-1">
-          Drop your logo here or click to upload
+
+        <p className="text-gray-900 font-bold text-base mb-2">
+          Drop your logo here
         </p>
-        <p className="text-sm text-neutral-400">PNG, JPG up to 5MB</p>
+        <p className="text-sm text-gray-600 font-medium">
+          PNG, JPG up to 5MB • Or click to browse
+        </p>
 
         <input
           type="file"
@@ -653,17 +742,19 @@ function LogoUpload({
         />
       </motion.div>
 
+      {/* Logo Preview */}
       {value && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="relative rounded-lg overflow-hidden bg-neutral-800 p-4 border border-neutral-700"
+          initial={{ opacity: 0, scale: 0.9, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="relative rounded-2xl overflow-hidden bg-white p-6 border border-gray-200 shadow-sm"
         >
           <motion.img
             src={value}
             alt="Logo preview"
-            className="max-h-32 mx-auto"
-            whileHover={{ scale: 1.05 }}
+            className="max-h-40 mx-auto object-contain"
+            whileHover={{ scale: 1.08 }}
+            transition={{ type: "spring", stiffness: 120, damping: 20 }}
           />
         </motion.div>
       )}
@@ -671,7 +762,7 @@ function LogoUpload({
   );
 }
 
-// Theme Toggle Component
+// Premium Theme Toggle Component
 function ThemeToggle({
   value,
   onChange,
@@ -681,7 +772,7 @@ function ThemeToggle({
 }) {
   return (
     <motion.div variants={itemVariants} className="space-y-3">
-      <label className="block text-sm font-semibold text-neutral-200">
+      <label className="block text-xs font-bold text-gray-900 uppercase tracking-widest">
         Default Theme
       </label>
       <div className="flex gap-4">
@@ -690,19 +781,25 @@ function ThemeToggle({
           { value: "light", label: "Light", icon: Sun },
         ].map((theme) => {
           const Icon = theme.icon;
+          const isSelected = value === theme.value;
           return (
             <motion.button
               key={theme.value}
               onClick={() => onChange(theme.value)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 rounded-lg font-semibold transition-all border-2 ${
-                value === theme.value
-                  ? "bg-red-600 border-red-600 text-white"
-                  : "bg-neutral-800 border-neutral-700 text-neutral-300 hover:border-neutral-600"
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{ scale: 0.96 }}
+              className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold text-sm tracking-wide transition-all border-2 ${
+                isSelected
+                  ? "bg-gradient-to-br from-red-600 to-red-700 border-red-600 text-white shadow-lg shadow-red-600/30"
+                  : "bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50"
               }`}
             >
-              <Icon size={20} weight="bold" />
+              <motion.div
+                animate={{ rotate: isSelected ? [0, 10, 0] : 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Icon size={20} weight="duotone" />
+              </motion.div>
               {theme.label}
             </motion.button>
           );
@@ -712,7 +809,7 @@ function ThemeToggle({
   );
 }
 
-// Font Selector Component
+// Premium Font Selector Component
 function FontSelector({
   value,
   onChange,
@@ -728,14 +825,19 @@ function FontSelector({
 
   return (
     <motion.div variants={itemVariants} className="space-y-3">
-      <label className="block text-sm font-semibold text-neutral-200">
+      <label className="block text-xs font-bold text-gray-900 uppercase tracking-widest">
         Font Family
       </label>
       <motion.select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        whileFocus={{ scale: 1.01 }}
-        className="w-full px-4 py-3 bg-neutral-800 border-2 border-neutral-700 hover:border-neutral-600 focus:border-red-600 rounded-lg text-neutral-100 focus:outline-none transition-all focus:ring-2 focus:ring-red-600/30 font-semibold"
+        whileFocus={{ scale: 1.01, y: -1 }}
+        className="w-full px-5 py-3.5 bg-white border-2 border-gray-200 hover:border-gray-300 focus:border-red-600 text-gray-900 rounded-xl focus:outline-none transition-all focus:ring-2 focus:ring-red-600/20 focus:ring-offset-2 font-bold text-sm shadow-sm appearance-none bg-no-repeat pr-10"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
+          backgroundPosition: "right 1rem center",
+          paddingRight: "2.75rem",
+        }}
       >
         {fonts.map((font) => (
           <option key={font.value} value={font.value}>
@@ -747,146 +849,204 @@ function FontSelector({
   );
 }
 
-// Live Preview Component
+// Luxury Live Preview Component
 function LivePreview({ formData }: { formData: Partial<BrandingConfig> }) {
   return (
     <motion.div
       variants={itemVariants}
-      className="bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800 border border-neutral-700 rounded-xl overflow-hidden backdrop-blur sticky top-8"
+      className="relative overflow-hidden rounded-3xl shadow-2xl"
     >
-      {/* Preview Header */}
-      <div className="bg-gradient-to-r from-neutral-900 to-neutral-800 border-b border-neutral-700 p-6">
-        <div className="flex items-center gap-3">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            className="w-12 h-12 rounded-lg bg-red-600/20 flex items-center justify-center"
-          >
-            <Palette size={24} weight="bold" className="text-red-600" />
-          </motion.div>
-          <div>
-            <p className="text-sm text-neutral-400">Live Preview</p>
-            <h3 className="text-lg font-bold text-neutral-100">Brand Preview</h3>
+      {/* Premium Outer Frame */}
+      <div className="bg-white border border-gray-200 rounded-3xl overflow-hidden backdrop-blur-xl">
+        {/* Preview Header */}
+        <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200 px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                className="w-12 h-12 rounded-full bg-gradient-to-br from-red-100 to-red-50 flex items-center justify-center"
+              >
+                <Palette size={24} weight="duotone" className="text-red-600" />
+              </motion.div>
+              <div>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">
+                  Live Preview
+                </p>
+                <h3 className="text-lg font-bold text-gray-900">
+                  Your Branded App
+                </h3>
+              </div>
+            </div>
+            <motion.div
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="text-green-600"
+            >
+              <Check size={20} weight="bold" />
+            </motion.div>
           </div>
         </div>
-      </div>
 
-      {/* Preview Content */}
-      <motion.div
-        className="p-8 space-y-6"
-        animate={{ backgroundColor: formData.secondaryColor || "#1e293b" }}
-        transition={{ duration: 0.5 }}
-      >
-        {/* Logo Preview */}
-        {formData.logoUrl && (
+        {/* Premium Preview Content */}
+        <motion.div
+          className="p-10 space-y-8 min-h-96"
+          animate={{ backgroundColor: formData.secondaryColor || "#1e293b" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          {/* Logo Section */}
+          {formData.logoUrl && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 80, damping: 25 }}
+              className="flex justify-center pt-4"
+            >
+              <motion.div
+                className="p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20"
+                whileHover={{ scale: 1.05 }}
+              >
+                <motion.img
+                  src={formData.logoUrl}
+                  alt="Logo"
+                  className="h-20 object-contain drop-shadow-lg"
+                />
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* App Title & Underline */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex justify-center"
+            className="text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
           >
-            <motion.img
-              src={formData.logoUrl}
-              alt="Logo"
-              className="h-16 object-contain drop-shadow-lg"
-              whileHover={{ scale: 1.1 }}
+            <motion.h2
+              animate={{ color: formData.primaryColor || "#3b82f6" }}
+              transition={{ duration: 0.6 }}
+              className="text-4xl font-bold mb-4 drop-shadow-sm"
+            >
+              {formData.appName || "Your Luxury Brand"}
+            </motion.h2>
+            <motion.div
+              className="h-1.5 w-20 mx-auto rounded-full"
+              animate={{ backgroundColor: formData.accentColor || "#dc2626" }}
+              transition={{ duration: 0.6 }}
             />
           </motion.div>
-        )}
 
-        {/* App Name */}
-        <motion.div
-          animate={{ color: formData.primaryColor || "#3b82f6" }}
-          transition={{ duration: 0.5 }}
-          className="text-center"
-        >
-          <h2 className="text-4xl font-bold mb-2">
-            {formData.appName || "The Service Stack"}
-          </h2>
+          {/* Tagline */}
+          <motion.p
+            className="text-center text-base font-medium opacity-90 drop-shadow-sm"
+            animate={{ color: formData.primaryColor ? "white" : "#f3f4f6" }}
+            transition={{ duration: 0.6 }}
+          >
+            Premium hospitality experience
+          </motion.p>
+
+          {/* Color Palette Preview */}
           <motion.div
-            className="h-1 w-16 bg-red-600 mx-auto rounded-full"
-            layoutId="underline"
-          />
-        </motion.div>
-
-        {/* Description */}
-        <p
-          className="text-center text-neutral-300 text-sm"
-          style={{
-            opacity: 0.8,
-            color: formData.primaryColor ? "inherit" : "#d1d5db",
-          }}
-        >
-          Your brand brings your vision to life
-        </p>
-
-        {/* Color Swatches */}
-        <div className="grid grid-cols-3 gap-4 pt-6">
-          {[
-            { label: "Primary", value: formData.primaryColor || "#3b82f6" },
-            {
-              label: "Secondary",
-              value: formData.secondaryColor || "#1e293b",
-            },
-            { label: "Accent", value: formData.accentColor || "#dc2626" },
-          ].map((color) => (
-            <motion.div key={color.label} className="text-center">
+            className="grid grid-cols-3 gap-4 pt-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            {[
+              { label: "Primary", value: formData.primaryColor || "#3b82f6" },
+              {
+                label: "Secondary",
+                value: formData.secondaryColor || "#1e293b",
+              },
+              { label: "Accent", value: formData.accentColor || "#dc2626" },
+            ].map((color, idx) => (
               <motion.div
-                className="w-full h-16 rounded-lg mb-2 border-2 border-neutral-700"
-                animate={{ backgroundColor: color.value }}
-                transition={{ duration: 0.5 }}
-                whileHover={{ scale: 1.08, borderColor: "rgb(229, 231, 235)" }}
-              />
-              <p className="text-xs text-neutral-400 font-mono">{color.label}</p>
-            </motion.div>
-          ))}
-        </div>
+                key={color.label}
+                className="text-center"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 + idx * 0.1 }}
+              >
+                <motion.div
+                  className="w-full h-20 rounded-2xl mb-3 border-2 border-white/20 shadow-xl cursor-pointer"
+                  animate={{ backgroundColor: color.value }}
+                  transition={{ duration: 0.6 }}
+                  whileHover={{
+                    scale: 1.1,
+                    y: -4,
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
+                  }}
+                />
+                <p className="text-xs font-bold text-white/70 uppercase tracking-wider">
+                  {color.label}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
 
-        {/* Button Previews */}
-        <div className="flex flex-col gap-3 pt-6">
-          <motion.button
-            animate={{ backgroundColor: formData.primaryColor || "#3b82f6" }}
-            transition={{ duration: 0.5 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full px-6 py-3 text-white font-semibold rounded-lg"
+          {/* Interactive Buttons Preview */}
+          <motion.div
+            className="flex flex-col gap-3 pt-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
           >
-            Primary Button
-          </motion.button>
-          <motion.button
-            animate={{ backgroundColor: formData.accentColor || "#dc2626" }}
-            transition={{ duration: 0.5 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full px-6 py-3 text-white font-semibold rounded-lg"
-          >
-            Accent Button
-          </motion.button>
-        </div>
+            <motion.button
+              animate={{ backgroundColor: formData.primaryColor || "#3b82f6" }}
+              transition={{ duration: 0.6 }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: `0 20px 40px ${formData.primaryColor || "#3b82f6"}40`,
+              }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full px-6 py-4 text-white font-bold rounded-xl shadow-lg flex items-center justify-center gap-2"
+            >
+              Explore Features
+              <ArrowRight size={18} weight="bold" />
+            </motion.button>
+            <motion.button
+              animate={{ backgroundColor: formData.accentColor || "#dc2626" }}
+              transition={{ duration: 0.6 }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: `0 20px 40px ${formData.accentColor || "#dc2626"}40`,
+              }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full px-6 py-4 text-white font-bold rounded-xl shadow-lg"
+            >
+              Get Started
+            </motion.button>
+          </motion.div>
 
-        {/* Theme Indicator */}
-        <motion.div
-          className="pt-6 border-t border-white/10 flex items-center justify-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          {formData.theme === "dark" ? (
-            <>
-              <Moon size={16} weight="bold" className="text-neutral-400" />
-              <span className="text-xs text-neutral-400 font-medium">
-                Dark Theme
-              </span>
-            </>
-          ) : (
-            <>
-              <Sun size={16} weight="bold" className="text-neutral-400" />
-              <span className="text-xs text-neutral-400 font-medium">
-                Light Theme
-              </span>
-            </>
-          )}
+          {/* Theme Indicator */}
+          <motion.div
+            className="pt-6 border-t border-white/20 flex items-center justify-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            {formData.theme === "dark" ? (
+              <>
+                <Moon
+                  size={18}
+                  weight="duotone"
+                  className="text-white/80"
+                />
+                <span className="text-sm font-bold text-white/70">Dark Theme</span>
+              </>
+            ) : (
+              <>
+                <Sun
+                  size={18}
+                  weight="duotone"
+                  className="text-white/80"
+                />
+                <span className="text-sm font-bold text-white/70">Light Theme</span>
+              </>
+            )}
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
