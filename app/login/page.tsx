@@ -8,22 +8,22 @@ export default function LoginPage() {
   const [state, formAction, pending] = useActionState(login, undefined);
 
   return (
-    <div className="max-w-sm mx-auto space-y-6">
+    <div className="max-w-sm mx-auto space-y-4">
       <div>
         <h1 className="text-2xl font-semibold">Sign in</h1>
-        <p className="mt-2 text-neutral-400 text-sm">
+        <p className="mt-1 text-neutral-400 text-sm">
           THE SERVICE STACK™ — leadership &amp; soft skills system.
         </p>
       </div>
 
-      <form action={formAction} className="space-y-4">
+      <form action={formAction} className="space-y-3">
         <label className="block space-y-1">
           <span className="text-sm text-neutral-400">Email</span>
           <input
             type="email"
             name="email"
             required
-            className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm"
+            className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2.5 text-sm"
           />
         </label>
         <label className="block space-y-1">
@@ -32,7 +32,7 @@ export default function LoginPage() {
             type="password"
             name="password"
             required
-            className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm"
+            className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2.5 text-sm"
           />
         </label>
 

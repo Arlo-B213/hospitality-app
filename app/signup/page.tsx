@@ -8,10 +8,10 @@ export default async function SignupPage() {
   });
 
   return (
-    <div className="max-w-sm mx-auto space-y-6">
+    <div className="max-w-sm mx-auto space-y-4">
       <div>
         <h1 className="text-2xl font-semibold">Create account</h1>
-        <p className="mt-2 text-neutral-400 text-sm">
+        <p className="mt-1 text-neutral-400 text-sm">
           Join an outlet or start a new one.
         </p>
       </div>

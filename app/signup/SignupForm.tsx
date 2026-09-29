@@ -14,7 +14,7 @@ export default function SignupForm({
   );
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="space-y-3">
       <label className="block space-y-1">
         <span className="text-sm text-neutral-400">Name</span>
         <input name="name" required className={inputClass} />
@@ -42,7 +42,7 @@ export default function SignupForm({
         </select>
       </label>
 
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <span className="text-sm text-neutral-400">Outlet</span>
         <div className="flex gap-4 text-sm">
           {outlets.length > 0 && (
@@ -107,4 +107,4 @@ export default function SignupForm({
 }
 
 const inputClass =
-  "w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm";
+  "w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2.5 text-sm";
