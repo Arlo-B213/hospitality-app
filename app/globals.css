@@ -57,40 +57,40 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.15;
 }
 
-/* Ultra-generous luxury spacing utilities */
+/* Refined luxury spacing utilities - tightened */
 @layer utilities {
-  /* Premium spacing - clamp for responsive luxury */
+  /* Premium spacing - refined for tighter feel */
   .p-clamp {
-    @apply p-8 sm:p-14 lg:p-16;
+    @apply p-6 sm:p-10 lg:p-12;
   }
 
   .px-clamp {
-    @apply px-6 sm:px-12 lg:p-20;
+    @apply px-5 sm:px-9 lg:px-14;
   }
 
   .py-clamp {
-    @apply py-8 sm:py-14 lg:py-20;
+    @apply py-6 sm:py-10 lg:py-14;
   }
 
   .gap-clamp {
-    @apply gap-8 sm:gap-10 lg:gap-14;
+    @apply gap-6 sm:gap-8 lg:gap-10;
   }
 
   .mb-clamp {
-    @apply mb-8 sm:mb-12 lg:mb-20;
+    @apply mb-6 sm:mb-10 lg:mb-14;
   }
 
   .mt-clamp {
-    @apply mt-8 sm:mt-12 lg:mt-20;
+    @apply mt-6 sm:mt-10 lg:mt-14;
   }
 
   .space-y-clamp > * + * {
-    @apply my-8 sm:my-12 lg:my-16;
+    @apply my-6 sm:my-9 lg:my-12;
   }
 
-  /* Generous section gaps */
+  /* Refined section gaps - tighter */
   .section-gap {
-    @apply space-y-12 sm:space-y-16 lg:space-y-24;
+    @apply space-y-10 sm:space-y-12 lg:space-y-16;
   }
 
   /* Premium border radius */

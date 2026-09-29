@@ -82,17 +82,53 @@ export const glowSweepVariants: Variants = {
   animate: {
     opacity: [0.4, 0.8, 0.4],
     transition: {
-      duration: 4.5,
+      duration: 4,
       repeat: Infinity,
       ease: "easeInOut",
     },
   },
 };
 
-// Subtle pulse - premium, refined (slower than original)
+// Slower glow for review pages
+export const glowSweepSlowVariants: Variants = {
+  animate: {
+    opacity: [0.4, 0.8, 0.4],
+    transition: {
+      duration: 5.5,
+      repeat: Infinity,
+      ease: "easeInOut",
+    },
+  },
+};
+
+// Subtle pulse - premium, refined
 export const pulseVariants: Variants = {
   animate: {
-    scale: [1, 1.03, 1],
+    scale: [1, 1.02, 1],
+    transition: {
+      duration: 3.5,
+      repeat: Infinity,
+      ease: "easeInOut",
+    },
+  },
+};
+
+// Slower pulse for review pages
+export const pulseSlowVariants: Variants = {
+  animate: {
+    scale: [1, 1.02, 1],
+    transition: {
+      duration: 5,
+      repeat: Infinity,
+      ease: "easeInOut",
+    },
+  },
+};
+
+// Float effect - slow, sophisticated
+export const floatVariants: Variants = {
+  animate: {
+    y: [0, -6, 0],
     transition: {
       duration: 4,
       repeat: Infinity,
@@ -101,12 +137,12 @@ export const pulseVariants: Variants = {
   },
 };
 
-// Float effect - slow, sophisticated (increased from 3s)
-export const floatVariants: Variants = {
+// Slower float for review pages
+export const floatSlowVariants: Variants = {
   animate: {
-    y: [0, -6, 0],
+    y: [0, -4, 0],
     transition: {
-      duration: 4.5,
+      duration: 5.5,
       repeat: Infinity,
       ease: "easeInOut",
     },
@@ -118,7 +154,7 @@ export const driftVariants: Variants = {
   animate: {
     y: [0, -4, 0],
     transition: {
-      duration: 5,
+      duration: 4.5,
       repeat: Infinity,
       ease: "easeInOut",
     },
@@ -130,7 +166,19 @@ export const shimmerVariants: Variants = {
   animate: {
     backgroundPosition: ["200% center", "-200% center"],
     transition: {
-      duration: 4,
+      duration: 3.5,
+      repeat: Infinity,
+      ease: "linear",
+    },
+  },
+};
+
+// Slower shimmer for review pages
+export const shimmerSlowVariants: Variants = {
+  animate: {
+    backgroundPosition: ["200% center", "-200% center"],
+    transition: {
+      duration: 5,
       repeat: Infinity,
       ease: "linear",
     },
@@ -285,5 +333,19 @@ export const expandVariants: Variants = {
     opacity: 1,
     height: "auto",
     transition: { duration: 0.5, ease: PREMIUM_EASING },
+  },
+};
+
+// Slower expansion for review pages - more deliberate
+export const expandSlowVariants: Variants = {
+  collapsed: {
+    opacity: 0,
+    height: 0,
+    transition: { duration: 0.6, ease: PREMIUM_EASING },
+  },
+  expanded: {
+    opacity: 1,
+    height: "auto",
+    transition: { duration: 0.75, ease: PREMIUM_EASING },
   },
 };

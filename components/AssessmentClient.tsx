@@ -8,7 +8,7 @@ import {
   cardVariants,
   slideTopVariants,
   fieldVariants,
-  pulseVariants,
+  pulseSlowVariants,
   progressVariants,
 } from "@/lib/animations";
 
@@ -173,7 +173,7 @@ export default function AssessmentClient({
                     <option value="SKILLED">Skilled</option>
                     <option value="MASTERY">Mastery</option>
                   </select>
-                  <ChevronDown
+                  <CaretDown
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none"
                     size={18}
                   />
@@ -207,7 +207,7 @@ export default function AssessmentClient({
             <h2 className="text-4xl md:text-5xl font-display text-neutral-900 dark:text-white">Assessment Results</h2>
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
             >
               <Star className="text-red-600 dark:text-red-500" size={28} weight="duotone" />
             </motion.div>
@@ -282,7 +282,7 @@ export default function AssessmentClient({
                 <div className="flex items-center gap-3">
                   <motion.div
                     animate="animate"
-                    variants={pulseVariants}
+                    variants={pulseSlowVariants}
                     className="flex-shrink-0"
                   >
                     <Star

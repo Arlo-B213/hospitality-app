@@ -468,7 +468,7 @@ function FormSection({
         </h3>
         <motion.div
           animate={{ rotate: expanded ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.4 }}
         >
           <svg
             className="w-5 h-5 text-neutral-400"
@@ -489,7 +489,7 @@ function FormSection({
       <motion.div
         initial={false}
         animate={{ height: expanded ? "auto" : 0, opacity: expanded ? 1 : 0 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
+        transition={{ duration: 0.6, ease: "easeInOut" }}
         className="overflow-hidden"
       >
         <div className="px-6 py-6 border-t border-neutral-800 space-y-6">
